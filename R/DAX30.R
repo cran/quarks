@@ -1,7 +1,7 @@
 #' German Stock Market Index (DAX) Financial Time Series Data
 #'
 #' A dataset that contains the daily financial data of the DAX from
-#' 2000 to December 2019 (currency in EUR).
+#' 2000 to December 2020 (currency in EUR).
 #'
 #' @format A data frame with 5327 rows and 10 variables:
 #' \describe{
