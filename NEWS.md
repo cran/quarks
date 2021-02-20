@@ -1,3 +1,7 @@
+# quarks 1.0.2
+- corrected a minor mistake in 'hs.R'.
+- minor adjustments in the README were made.
+
 # quarks 1.0.1
 
 - the example in the README file was adjusted.

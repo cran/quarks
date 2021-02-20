@@ -47,9 +47,9 @@ hs <- function(x, p = 0.95, method = c("age", "plain"), lambda = 0.98) {
 
     if (method == "age") {
         n <- length(x)
-        w <- lambda^((1:n) - 1) * (1 - lambda) / (1 - lambda^n)
+        w <- rev(lambda^((1:n) - 1) * (1 - lambda) / (1 - lambda^n))
         l <- sort(-x)
-        l.ind <- order(-x)
+        l.ind <- sort(-x, index.return = TRUE)$ix
         pcum <- cumsum(w[l.ind])
         ind.high <- which(pcum > p)[1]
         ind.low <- which(pcum > p)[1] - 1
