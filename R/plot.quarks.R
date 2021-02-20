@@ -26,7 +26,7 @@ plot.quarks <- function(x, ...) {
     dots[["pch"]] <- 1
     dots[["xlab"]] <- "out-of-sample observations"
     dots[["ylab"]] <- "Negative returns, VaR and ES"
-    dots[["main"]] <- "VaR (green) and ES (red) - (rolling) one-step forecasts"
+    dots[["main"]] <- "VaR (red) and ES (green) - (rolling) one-step forecasts"
 
     do.call(what <- graphics::matplot, args = dots)
   }

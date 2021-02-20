@@ -1,4 +1,10 @@
+# quarks 1.0.3
+
+- README is slightly adjusted
+- plot.quarks.R is rectified
+
 # quarks 1.0.2
+
 - corrected a minor mistake in 'hs.R'.
 - minor adjustments in the README were made.
 
