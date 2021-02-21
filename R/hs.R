@@ -1,7 +1,7 @@
 #' Nonparametric calculation of univariate Value at Risk and Expected Shortfall
 #'
-#' Computes Value at Risk and Expected Shortfall by means of plain and age-
-#' weighted historical simulation
+#' Computes Value at Risk and Expected Shortfall (also called Conditional Value
+#' at Risk) by means of plain and age-weighted historical simulation.
 #'
 #' @param x a numeric vector of asset returns
 #' @param p confidence level for VaR calculation; default is 0.95\%
@@ -13,7 +13,7 @@
 #' @return Returns a list with the following elements:
 #' \describe{
 #' \item{VaR}{Calculated Value at Risk}
-#' \item{ES}{Calculated Expected Shortfall}
+#' \item{ES}{Calculated Expected Shortfall (Conditional Value at Risk)}
 #' }
 #' @examples
 #' prices <- DAX30$price.close
@@ -42,7 +42,7 @@ hs <- function(x, p = 0.95, method = c("age", "plain"), lambda = 0.98) {
     if (method == "plain") {
         l <- sort(-x)
         VaR <- stats::quantile(l, p)
-        ES <- mean(l[l >= VaR])
+        ES <- mean(l[l > VaR])
     }
 
     if (method == "age") {
@@ -57,7 +57,10 @@ hs <- function(x, p = 0.95, method = c("age", "plain"), lambda = 0.98) {
         VaR.low <- l[ind.low]
         VaR <- VaR.low + (p - pcum[ind.low]) * (VaR.high - VaR.low) /
             (pcum[ind.high] - pcum[ind.low])
-        ES <- mean(l[l >= VaR])
+        w.ES <- w[which(l >= VaR)]
+        w.ES <- w.ES / sum(w.ES)
+        l.ES <- l[l > VaR]
+        ES <- sum(l.ES * w.ES)
     }
     results <- cbind(VaR = VaR, ES = ES)
     colnames(results) <- c("VaR", "ES")

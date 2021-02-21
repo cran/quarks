@@ -1,8 +1,9 @@
 #' Volatility weighted historical simulation
 #'
-#' Calculates univariate Value at Risk and Expected Shortfall by means
-#' of volatility weighted historical simulation. Volatility is
-#' estimated with an exponentially weighted moving average.
+#' Calculates univariate Value at Risk and Expected Shortfall (also called
+#' Conditional Value at Risk) by means of volatility weighted historical
+#' simulation. Volatility is estimated with an exponentially weighted moving
+#' average.
 #'
 #' @param x a numeric vector of asset returns
 #' @param p confidence level for VaR calculation; default is 0.95\%
@@ -13,7 +14,7 @@
 #' @return Returns a list with the following elements:
 #' \describe{
 #' \item{VaR}{Calculated Value at Risk}
-#' \item{ES}{Calculated Expected Shortfall}
+#' \item{ES}{Calculated Expected Shortfall (Conditional Value at Risk)}
 #' }
 #' @examples
 #' prices <- DAX30$price.close
@@ -40,7 +41,7 @@ vwhs <- function(x, p = 0.95, lambda = 0.94) {
     xz <- x/csig
     loss <- -(xz * csig[n])
     VaR <- stats::quantile(loss, p)
-    ES <- mean(loss[loss >= VaR])
+    ES <- mean(loss[loss > VaR])
     results <- cbind(VaR = VaR, ES = ES)
     colnames(results) <- c("VaR", "ES")
     rownames(results) <- paste0(100 * p, "%")

@@ -19,12 +19,12 @@ hs(x, p = 0.95, method = c("age", "plain"), lambda = 0.98)
 Returns a list with the following elements:
 \describe{
 \item{VaR}{Calculated Value at Risk}
-\item{ES}{Calculated Expected Shortfall}
+\item{ES}{Calculated Expected Shortfall (Conditional Value at Risk)}
 }
 }
 \description{
-Computes Value at Risk and Expected Shortfall by means of plain and age-
-weighted historical simulation
+Computes Value at Risk and Expected Shortfall (also called Conditional Value
+at Risk) by means of plain and age-weighted historical simulation.
 }
 \examples{
 prices <- DAX30$price.close

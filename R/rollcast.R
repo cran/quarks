@@ -1,8 +1,8 @@
 #' Rolling one-step forecasts of Value at Risk and Expected Shortfall
 #'
 #' Computes rolling one-step forecasts of Value at Risk and Expected Shortfall
-#' by means of plain historical simulation as well as age- and volatility-
-#' weighted historical simulation.
+#' (also called Conditional Value at Risk) by means of plain historical
+#' simulation as well as age- and volatility-weighted historical simulation.
 #'
 #' @param x a numeric vector of asset returns
 #' @param p confidence level for VaR calculation; default is 0.95\%
@@ -19,7 +19,7 @@
 #' \item{VaR}{numerical vector containing out-of-sample forecasts of Value at
 #' Risk}
 #' \item{ES}{numerical vector containing out-of-sample forecasts of Expected
-#' Shortfall}
+#' Shortfall (Conditional Value at Risk)}
 #' \item{xout}{numerical vector containing out-of-sample returns}
 #' }
 #' @examples
@@ -85,9 +85,10 @@ rollcast <- function(x, p = 0.95, method = c("plain", "age", "vwhs"),
     if (length(nwin) != 1 || is.na(nwin) || !is.numeric(nwin) || nwin <= 1 ||
         is.null(nwin)) {
         stop("The argument 'nwin' must be a single non-NA integer value
-             with nwin >= 1.")
+             with nwin > 1.")
     }
-    if (nwin >= length(x) || nout >= length(x) || (nwin + nout) >= length(x)) {
+    if (nwin > (length(x) - nout) || nout > (length(x) - nwin) ||
+       (nwin + nout) > length(x)) {
         stop("Window size and (or) out-of-sample size are too large.")
     }
 
@@ -101,7 +102,12 @@ rollcast <- function(x, p = 0.95, method = c("plain", "age", "vwhs"),
     n <- length(x)
     nin <- n - nout
     xin <- x[1:nin]
-    xout <- x[(nin + 1):n]
+    if (nout == 0){
+        xout <- NA
+    }
+    else{
+        xout <- x[(nin + 1):n]
+    }
     xstart <- xin[(nin - nwin + 1):nin]
     fcasts <- matrix(NA, max(nout, 1), 2, dimnames = list(c(), c("VaR", "ES")))
     if (method == "plain") {

@@ -1,7 +1,12 @@
+# quarks 1.0.4
+
+- slightly adapted hs.R, vwhs.R and rollcast.R 
+- modified ES-calculation for age-weighted historical simulation
+
 # quarks 1.0.3
 
-- README is slightly adjusted
-- plot.quarks.R is rectified
+- slightly adjusted README
+- modified plot.quarks.R
 
 # quarks 1.0.2
 

@@ -17,13 +17,14 @@ vwhs(x, p = 0.95, lambda = 0.94)
 Returns a list with the following elements:
 \describe{
 \item{VaR}{Calculated Value at Risk}
-\item{ES}{Calculated Expected Shortfall}
+\item{ES}{Calculated Expected Shortfall (Conditional Value at Risk)}
 }
 }
 \description{
-Calculates univariate Value at Risk and Expected Shortfall by means
-of volatility weighted historical simulation. Volatility is
-estimated with an exponentially weighted moving average.
+Calculates univariate Value at Risk and Expected Shortfall (also called
+Conditional Value at Risk) by means of volatility weighted historical
+simulation. Volatility is estimated with an exponentially weighted moving
+average.
 }
 \examples{
 prices <- DAX30$price.close

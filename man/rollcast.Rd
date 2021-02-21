@@ -33,14 +33,14 @@ Returns a list with the following elements:
 \item{VaR}{numerical vector containing out-of-sample forecasts of Value at
 Risk}
 \item{ES}{numerical vector containing out-of-sample forecasts of Expected
-Shortfall}
+Shortfall (Conditional Value at Risk)}
 \item{xout}{numerical vector containing out-of-sample returns}
 }
 }
 \description{
 Computes rolling one-step forecasts of Value at Risk and Expected Shortfall
-by means of plain historical simulation as well as age- and volatility-
-weighted historical simulation.
+(also called Conditional Value at Risk) by means of plain historical
+simulation as well as age- and volatility-weighted historical simulation.
 }
 \examples{
 
