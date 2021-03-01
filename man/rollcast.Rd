@@ -48,31 +48,31 @@ prices <- DAX30$price.close
 returns <- diff(log(prices))
 n <- length(returns)
 nout <- 250 # number of obs. for out-of-sample forecasting
-retout <- returns[(n - nout + 1):n]
+nwin <- 500 # window size for rolling forecasts
 
 
 ### Example 1 - plain historical simulation
-results1 <- rollcast(x = returns, p = 0.99, method = 'plain', nout = 250,
-                     nwin = 500)
-matplot(1:nout, cbind(-retout, results1$VaR, results1$ES),
+results1 <- rollcast(x = returns, p = 0.99, method = 'plain', nout = nout,
+                     nwin = nwin)
+matplot(1:nout, cbind(-results1$xout, results1$VaR, results1$ES),
   type = 'hll',
   xlab = 'number of out-of-sample obs.', ylab = 'losses, VaR and ES',
   main = 'Plain HS - 99\% VaR and ES for the DAX30 return series'
 )
 
 ### Example 2 - age weighted historical simulation
-results2 <- rollcast(x = returns, p = 0.99, method = 'age', nout = 250,
-                     nwin = 500)
-matplot(1:nout, cbind(-retout, results2$VaR, results2$ES),
+results2 <- rollcast(x = returns, p = 0.99, method = 'age', nout = nout,
+                     nwin = nwin)
+matplot(1:nout, cbind(-results2$xout, results2$VaR, results2$ES),
   type = 'hll',
   xlab = 'number of out-of-sample obs.', ylab = 'losses, VaR and ES',
   main = 'Age weighted HS - 99\% VaR and ES for the DAX30 return series'
 )
 
 ### Example 3 - volatility weighted historical simulation
-results3 <- rollcast(x = returns, p = 0.99, method = 'vwhs', nout = 250,
-                     nwin = 500)
-matplot(1:nout, cbind(-retout, results3$VaR, results3$ES),
+results3 <- rollcast(x = returns, p = 0.99, method = 'vwhs', nout = nout,
+                     nwin = nwin)
+matplot(1:nout, cbind(-results3$xout, results3$VaR, results3$ES),
   type = 'hll',
   xlab = 'number of out-of-sample obs.', ylab = 'losses, VaR and ES',
   main = 'Vol. weighted HS - 99\% VaR and ES for the DAX30 return series'

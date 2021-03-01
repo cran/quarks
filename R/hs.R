@@ -52,12 +52,12 @@ hs <- function(x, p = 0.95, method = c("age", "plain"), lambda = 0.98) {
         l.ind <- sort(-x, index.return = TRUE)$ix
         pcum <- cumsum(w[l.ind])
         ind.high <- which(pcum > p)[1]
-        ind.low <- which(pcum > p)[1] - 1
+        ind.low <- ind.high - 1
         VaR.high <- l[ind.high]
         VaR.low <- l[ind.low]
         VaR <- VaR.low + (p - pcum[ind.low]) * (VaR.high - VaR.low) /
             (pcum[ind.high] - pcum[ind.low])
-        w.ES <- w[which(l >= VaR)]
+        w.ES <- w[which(l > VaR)]
         w.ES <- w.ES / sum(w.ES)
         l.ES <- l[l > VaR]
         ES <- sum(l.ES * w.ES)

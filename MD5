@@ -1,11 +1,11 @@
-ccc8e85770b90895475362d10a386a10 *DESCRIPTION
+35e1e08ad1243a3ce27aa8f859304841 *DESCRIPTION
 55751633394eecde7ac104901d6ce00a *NAMESPACE
-5e11d43547b9dafbbd9c687441ff9e1d *NEWS.md
+dbe6b7e427c1daf5e287509e9dcfbce7 *NEWS.md
 2f48af7d0e04d6dfa68116930a36b90b *R/DAX30.R
 11e66f2e9287b67727d2640dcde372c5 *R/ewma.R
-2d1f2821b7316d7ecd4ef75c97fabd87 *R/hs.R
+a039a9e7915033a23e3477a8d5f8c25f *R/hs.R
 387ed891cbb210508c4468d414b7613a *R/plot.quarks.R
-bf3311ccaf3e25f6217594295cce295f *R/rollcast.R
+31f0f1b3d899161ea56b9ecad192efc4 *R/rollcast.R
 18a67571add2fefc42c0736cb0e6cbbe *R/vwhs.R
 729b2098615ceb14f3df547342389f6e *README.md
 e2ba198ed658963e67f827c73f77ffbe *data/DAX30.rda
@@ -16,5 +16,5 @@ c5aa0a33e015adbcb33a13808df1e4d9 *man/figures/README-unnamed-chunk-2-1.png
 65e69931f3bbfcc5dae40a24af73f2f2 *man/figures/README-unnamed-chunk-4-1.png
 7bd4a5945f17d5b7cd726f0bbb65666b *man/hs.Rd
 abb0cd14f8e44f1cf6ee68f51102b2bc *man/plot.quarks.Rd
-df4c669572704bc639d3b8e5294f6faf *man/rollcast.Rd
+a34ec6164716f6a5556f6aad4c2241ec *man/rollcast.Rd
 c0a40fb4d77da9f8b724fe1e1515a250 *man/vwhs.Rd
