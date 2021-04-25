@@ -4,7 +4,7 @@
 #' at Risk) by means of plain and age-weighted historical simulation.
 #'
 #' @param x a numeric vector of asset returns
-#' @param p confidence level for VaR calculation; default is 0.95\%
+#' @param p confidence level for VaR calculation; default is 0.975
 #' @param method method to be used for calculation; default is 'plain'
 #' @param lambda decay factor for the calculation of weights; default is 0.98
 #'
@@ -18,10 +18,10 @@
 #' @examples
 #' prices <- DAX30$price.close
 #' returns <- diff(log(prices))
-#' hs(x = returns, p = 0.95, method = 'plain')
-#' hs(x = returns, p = 0.95, method = 'age', lambda = 0.98)
+#' hs(x = returns, p = 0.975, method = 'plain')
+#' hs(x = returns, p = 0.975, method = 'age', lambda = 0.98)
 
-hs <- function(x, p = 0.95, method = c("age", "plain"), lambda = 0.98) {
+hs <- function(x, p = 0.975, method = c("age", "plain"), lambda = 0.98) {
     if (length(x) <= 1 || !all(!is.na(x)) || !is.numeric(x)) {
         stop("A numeric vector of length > 1 and without NAs must be passed to",
              " 'x'.")
@@ -65,5 +65,6 @@ hs <- function(x, p = 0.95, method = c("age", "plain"), lambda = 0.98) {
     results <- cbind(VaR = VaR, ES = ES)
     colnames(results) <- c("VaR", "ES")
     rownames(results) <- paste0(100 * p, "%")
+    results <- list(VaR_ES = results)
     results
 }

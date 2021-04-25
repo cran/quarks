@@ -2,6 +2,7 @@
 
 S3method(plot,quarks)
 export(ewma)
+export(fhs)
 export(hs)
 export(rollcast)
 export(vwhs)

@@ -28,7 +28,7 @@ plot.quarks <- function(x, ...) {
     dots[["ylab"]] <- "Negative returns, VaR and ES"
     dots[["main"]] <- "VaR (red) and ES (green) - (rolling) one-step forecasts"
 
-    do.call(what <- graphics::matplot, args = dots)
+    do.call(what = graphics::matplot, args = dots)
   }
 }
 

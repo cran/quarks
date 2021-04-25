@@ -4,12 +4,12 @@
 \alias{hs}
 \title{Nonparametric calculation of univariate Value at Risk and Expected Shortfall}
 \usage{
-hs(x, p = 0.95, method = c("age", "plain"), lambda = 0.98)
+hs(x, p = 0.975, method = c("age", "plain"), lambda = 0.98)
 }
 \arguments{
 \item{x}{a numeric vector of asset returns}
 
-\item{p}{confidence level for VaR calculation; default is 0.95\%}
+\item{p}{confidence level for VaR calculation; default is 0.975}
 
 \item{method}{method to be used for calculation; default is 'plain'}
 
@@ -29,6 +29,6 @@ at Risk) by means of plain and age-weighted historical simulation.
 \examples{
 prices <- DAX30$price.close
 returns <- diff(log(prices))
-hs(x = returns, p = 0.95, method = 'plain')
-hs(x = returns, p = 0.95, method = 'age', lambda = 0.98)
+hs(x = returns, p = 0.975, method = 'plain')
+hs(x = returns, p = 0.975, method = 'age', lambda = 0.98)
 }

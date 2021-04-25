@@ -6,26 +6,39 @@
 \usage{
 rollcast(
   x,
-  p = 0.95,
-  method = c("plain", "age", "vwhs"),
+  p = 0.975,
+  model = c("EWMA", "GARCH"),
+  method = c("plain", "age", "vwhs", "fhs"),
   lambda = c(0.94, 0.98),
   nout = NULL,
-  nwin = NULL
+  nwin = NULL,
+  nboot = NULL,
+  ...
 )
 }
 \arguments{
 \item{x}{a numeric vector of asset returns}
 
-\item{p}{confidence level for VaR calculation; default is 0.95\%}
+\item{p}{confidence level for VaR calculation; default is 0.975}
+
+\item{model}{model for estimating conditional volatility; default is 'EWMA'}
 
 \item{method}{method to be used for calculation; default is 'plain'}
 
-\item{lambda}{decay factor for the calculation of weights; default is 0.94
-for \emph{method = 'age'} and 0.98 for \emph{method = 'vwhs'}}
+\item{lambda}{decay factor for the calculation of weights; default is 0.98
+for \emph{method = 'age'} and 0.94 for \emph{method = 'vwhs'} or
+\emph{method = 'fhs'}}
 
 \item{nout}{number of out-of-sample observations; default is NULL}
 
 \item{nwin}{window size for rolling one-step forecasting; default is NULL}
+
+\item{nboot}{size of bootstrap sample; default is NULL}
+
+\item{...}{additional arguments of the \emph{ugarchspec} function from the
+\emph{rugarch}-package; the default settings for the arguments
+\emph{variance.model} and \emph{mean.model} are \emph{list(model = 'sGARCH',
+garchOrder = c(1, 1))} and \emph{list(armaOrder = c(0, 0))}, respectively}
 }
 \value{
 Returns a list with the following elements:
@@ -40,7 +53,8 @@ Shortfall (Conditional Value at Risk)}
 \description{
 Computes rolling one-step forecasts of Value at Risk and Expected Shortfall
 (also called Conditional Value at Risk) by means of plain historical
-simulation as well as age- and volatility-weighted historical simulation.
+simulation age- and volatility-weighted historical simulation as well as
+filtered historical simulation.
 }
 \examples{
 
@@ -52,29 +66,55 @@ nwin <- 500 # window size for rolling forecasts
 
 
 ### Example 1 - plain historical simulation
-results1 <- rollcast(x = returns, p = 0.99, method = 'plain', nout = nout,
+results1 <- rollcast(x = returns, p = 0.975, method = 'plain', nout = nout,
                      nwin = nwin)
 matplot(1:nout, cbind(-results1$xout, results1$VaR, results1$ES),
   type = 'hll',
   xlab = 'number of out-of-sample obs.', ylab = 'losses, VaR and ES',
-  main = 'Plain HS - 99\% VaR and ES for the DAX30 return series'
-)
+  main = 'Plain HS - 97.5\% VaR and ES for the DAX30 return series')
 
 ### Example 2 - age weighted historical simulation
-results2 <- rollcast(x = returns, p = 0.99, method = 'age', nout = nout,
+results2 <- rollcast(x = returns, p = 0.975, method = 'age', nout = nout,
                      nwin = nwin)
 matplot(1:nout, cbind(-results2$xout, results2$VaR, results2$ES),
   type = 'hll',
   xlab = 'number of out-of-sample obs.', ylab = 'losses, VaR and ES',
-  main = 'Age weighted HS - 99\% VaR and ES for the DAX30 return series'
-)
+  main = 'Age weighted HS - 97.5\% VaR and ES for the DAX30 return series')
 
-### Example 3 - volatility weighted historical simulation
-results3 <- rollcast(x = returns, p = 0.99, method = 'vwhs', nout = nout,
-                     nwin = nwin)
+### Example 3 - volatility weighted historical simulation - EWMA
+results3 <- rollcast(x = returns, p = 0.975, model = 'EWMA',
+                     method = 'vwhs', nout = nout, nwin = nwin)
 matplot(1:nout, cbind(-results3$xout, results3$VaR, results3$ES),
   type = 'hll',
   xlab = 'number of out-of-sample obs.', ylab = 'losses, VaR and ES',
-  main = 'Vol. weighted HS - 99\% VaR and ES for the DAX30 return series'
-)
+  main = 'Vol. weighted HS (EWMA) - 97.5\% VaR and ES for the DAX30 return
+  series')
+\dontrun{
+### Example 4 - volatility weighted historical simulation - GARCH
+results4 <- rollcast(x = returns, p = 0.975, model = 'GARCH',
+                     method = 'vwhs', nout = nout, nwin = nwin)
+matplot(1:nout, cbind(-results4$xout, results4$VaR, results4$ES),
+  type = 'hll',
+  xlab = 'number of out-of-sample obs.', ylab = 'losses, VaR and ES',
+  main = 'Vol. weighted HS (GARCH) - 97.5\% VaR and ES for the DAX30 return
+  series')
+}
+### Example 5 - filtered historical simulation - EWMA
+results5 <- rollcast(x = returns, p = 0.975, model = 'EWMA',
+                     method = 'fhs', nout = nout, nwin = nwin, nboot = 10000)
+matplot(1:nout, cbind(-results5$xout, results5$VaR, results5$ES),
+  type = 'hll',
+  xlab = 'number of out-of-sample obs.', ylab = 'losses, VaR and ES',
+  main = 'Filtered HS (EWMA) - 97.5\% VaR and ES for the DAX30 return
+  series')
+\dontrun{
+### Example 6 - filtered historical simulation - GARCH
+results6 <- rollcast(x = returns, p = 0.975, model = 'GARCH',
+                     method = 'fhs', nout = nout, nwin = nwin, nboot = 10000)
+matplot(1:nout, cbind(-results6$xout, results6$VaR, results6$ES),
+  type = 'hll',
+  xlab = 'number of out-of-sample obs.', ylab = 'losses, VaR and ES',
+  main = 'Filtered HS (GARCH) - 97.5\% VaR and ES for the DAX30 return
+  series')
+}
 }
