@@ -2,7 +2,7 @@ Type: Package
 Package: quarks
 Title: Simple Methods for Calculating Value at Risk and Expected
         Shortfall
-Version: 1.0.7
+Version: 1.0.8
 Authors@R: 
     person(given = "Sebastian",
            family = "Letmathe",
@@ -24,8 +24,8 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2021-09-01 22:15:53 UTC; Letmode
+Packaged: 2021-09-02 18:20:21 UTC; Letmode
 Author: Sebastian Letmathe [aut, cre] (Paderborn University, Germany)
 Maintainer: Sebastian Letmathe <sebastian.letmathe@uni-paderborn.de>
 Repository: CRAN
-Date/Publication: 2021-09-02 14:20:02 UTC
+Date/Publication: 2021-09-02 23:30:02 UTC

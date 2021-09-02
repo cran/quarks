@@ -205,45 +205,46 @@ rollcast <- function(x, p = 0.975, model = c("EWMA", "GARCH"),
         }
     }
     if (method == "vwhs") {
-        fcasts[1, ] <- unlist(vwhs(xstart, p = p, lambda = lambda,
+        fcasts[1, ] <- as.double(unlist(vwhs(xstart, p = p, lambda = lambda,
                                    model = model, ...),
-                              use.names = FALSE)[1:2]
+                              use.names = FALSE)[1:2])
         if (nout > 1) {
             for (i in 2:nout) {
                 if (i <= nwin) {
-                    fcasts[i, ] <- unlist(vwhs(c(xstart[i:nwin],
+                    fcasts[i, ] <- as.double(unlist(vwhs(c(xstart[i:nwin],
                                                xout[1:(i - 1)]), p = p,
                                                lambda = lambda,
                                                model = model, ...),
-                                          use.names = FALSE)[1:2]
+                                          use.names = FALSE)[1:2])
                 }
                 else{
-                    fcasts[i, ] <- unlist(vwhs(xout[(i - nwin):(i - 1)], p = p,
+                    fcasts[i, ] <- as.double(unlist(vwhs(xout[(i - nwin):(i - 1)], p = p,
                                                lambda = lambda, model = model,
                                                ...),
-                                          use.names = FALSE)[1:2]
+                                          use.names = FALSE)[1:2])
                 }
             }
         }
     }
+
     if (method == "fhs") {
-        fcasts[1, ] <- unlist(fhs(xstart, p = p, lambda = lambda,
+        fcasts[1, ] <- as.double(unlist(fhs(xstart, p = p, lambda = lambda,
                                   nboot = nboot, model = model, ...),
-                              use.names = FALSE)[1:2]
+                              use.names = FALSE)[1:2])
         if (nout > 1) {
             for (i in 2:nout) {
                 if (i <= nwin) {
-                    fcasts[i, ] <- unlist(fhs(c(xstart[i:nwin],
+                    fcasts[i, ] <- as.double(unlist(fhs(c(xstart[i:nwin],
                                               xout[1:(i - 1)]), p = p,
                                               lambda = lambda, nboot = nboot,
                                               model = model, ...),
-                                         use.names = FALSE)[1:2]
+                                         use.names = FALSE)[1:2])
                 }
                 else{
-                    fcasts[i, ] <- unlist(fhs(xout[(i - nwin):(i - 1)], p = p,
+                    fcasts[i, ] <- as.double(unlist(fhs(xout[(i - nwin):(i - 1)], p = p,
                                               lambda = lambda, nboot = nboot,
                                               model = model, ...),
-                                         use.names = FALSE)[1:2]
+                                         use.names = FALSE)[1:2])
                 }
             }
         }
