@@ -1,3 +1,10 @@
+# quarks 1.0.7
+
+- changed output value of 'hs.R', 'vwhs.R' and 'fhs.R'
+- modified 'plot.quarks.R'; main title and axis labels can now be adjusted
+  manually
+- added five financial time series data sets
+
 # quarks 1.0.6
 
 - changed default of coverage level (p) from 0.95 to 0.975

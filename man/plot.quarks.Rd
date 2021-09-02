@@ -7,7 +7,7 @@
 \method{plot}{quarks}(x, ...)
 }
 \arguments{
-\item{x}{an input object of class \emph{quarks}.}
+\item{x}{an input object of class \code{quarks}.}
 
 \item{...}{additional arguments of the standard plot method.}
 }

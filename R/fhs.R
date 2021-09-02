@@ -1,19 +1,25 @@
 #' Filtered historical simulation
 #'
-#' Calculates univariate Value at Risk and Expected Shortfall (also called
-#' Conditional Value at Risk) by means of filtered historical simulation.
+#' Calculates univariate Value at Risk and Expected Shortfall (Conditional
+#' Value at Risk) by means of filtered historical simulation.
 #' Volatility can be estimated with an exponentially weighted moving
 #' average or a GARCH-type model.
 #'
 #' @param x a numeric vector of asset returns
-#' @param p confidence level for VaR calculation; default is 0.975
-#' @param model model for estimating conditional volatility; default is 'EWMA'
-#' @param lambda decay factor for the calculation of weights; default is 0.94
-#' @param nboot size of bootstrap sample; default is NULL
-#' @param ... additional arguments of the \emph{ugarchspec} function from the
-#' \emph{rugarch}-package; the default settings for the arguments
-#' \emph{variance.model} and \emph{mean.model} are \emph{list(model = 'sGARCH',
-#' garchOrder = c(1, 1))} and \emph{list(armaOrder = c(0, 0))}, respectively
+#' @param p confidence level for VaR calculation; default is \code{0.975}
+#' @param model model for estimating conditional volatility; options are \code{'EWMA'}
+#' and \code{'GARCH'}; if \code{model = 'GARCH'}, additional arguments can be adjusted
+#' via \code{...}; default is \code{'EWMA'}
+#' @param lambda decay factor for the calculation of weights; default is \code{0.94}
+#' @param nboot size of bootstrap sample; must be a single non-NA integer value
+#' with \code{nboot > 0}; default is \code{NULL}
+#' @param ... additional arguments of the \code{ugarchspec} function from the
+#' \code{rugarch}-package; only applied if \code{model = 'GARCH'}; default
+#' settings for the arguments \code{variance.model} and \code{mean.model} are:
+#' \describe{
+#' \item{\code{variance.model} = \code{list(model = 'sGARCH', garchOrder = c(1, 1))}}{}
+#' \item{\code{mean.model} = \code{list(armaOrder = c(0, 0))}}{}
+#' }
 #'
 #' @export
 #'
@@ -22,8 +28,8 @@
 #' \item{VaR}{Calculated Value at Risk}
 #' \item{ES}{Calculated Expected Shortfall (Conditional Value at Risk)}
 #' \item{garchmod}{The model fit. Is the respective GARCH fit for
-#' \emph{model = "GARCH"} (see \emph{rugarch} documentation) and  'EWMA' for
-#' \emph{model = "EWMA"}}
+#' \code{model = "GARCH"} (see \code{rugarch} documentation) and  \code{'EWMA'} for
+#' \code{model = "EWMA"}}
 #' }
 #' @examples
 #' prices <- DAX30$price.close
@@ -31,14 +37,14 @@
 #' # volatility weighting via EWMA
 #' ewma <- fhs(x = returns, p = 0.975, model = "EWMA", lambda = 0.94,
 #'             nboot = 10000)
-#' ewma$VaR_ES
+#' ewma
 #' # volatility weighting via GARCH
 #' garch <- fhs(x = returns, p = 0.975, model = "GARCH", variance.model =
 #' list(model = "sGARCH"), nboot = 10000)
-#' garch$VaR_ES
+#' garch
 
 fhs <- function(x, p = 0.975, model = c("EWMA", "GARCH"), lambda = 0.94,
-                nboot = 5000, ...) {
+                nboot = NULL, ...) {
   if (length(x) <= 1 || !all(!is.na(x)) || !is.numeric(x)) {
     stop("A numeric vector of length > 1 and without NAs must be passed to",
          " 'x'.")
@@ -86,10 +92,8 @@ fhs <- function(x, p = 0.975, model = c("EWMA", "GARCH"), lambda = 0.94,
   xz <- x/csig
   boot.xz <- sample(xz, size = nboot, replace = TRUE)
   boot.loss <- -(boot.xz * one.ahead.csig)
-  VaR <- stats::quantile(boot.loss, p)
+  VaR <- unname(stats::quantile(boot.loss, p))
   ES <- mean(boot.loss[boot.loss > VaR])
-  results <- cbind(VaR = VaR, ES = ES)
-  colnames(results) <- c(paste0(100 * p, "% VaR"), "ES")
-  results <- list(VaR_ES = results, garchmod = fit)
+  results <- list(VaR = VaR, ES = ES, garchmod = fit)
   results
 }

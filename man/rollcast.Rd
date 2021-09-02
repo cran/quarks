@@ -19,26 +19,32 @@ rollcast(
 \arguments{
 \item{x}{a numeric vector of asset returns}
 
-\item{p}{confidence level for VaR calculation; default is 0.975}
+\item{p}{confidence level for VaR calculation; default is \code{0.975}}
 
-\item{model}{model for estimating conditional volatility; default is 'EWMA'}
+\item{model}{model for estimating conditional volatility; options are \code{'EWMA'}
+and \code{'GARCH'}; if \code{model = 'GARCH'}, additional arguments can be adjusted
+via \code{...}; default is \code{'EWMA'}}
 
-\item{method}{method to be used for calculation; default is 'plain'}
+\item{method}{method to be used for calculation; default is \code{'plain'}}
 
-\item{lambda}{decay factor for the calculation of weights; default is 0.98
-for \emph{method = 'age'} and 0.94 for \emph{method = 'vwhs'} or
-\emph{method = 'fhs'}}
+\item{lambda}{decay factor for the calculation of weights; default is \code{0.98}
+for \code{method = 'age'} and \code{0.94} for \code{method = 'vwhs'} or
+\code{method = 'fhs'}}
 
-\item{nout}{number of out-of-sample observations; default is NULL}
+\item{nout}{number of out-of-sample observations; default is \code{NULL}}
 
-\item{nwin}{window size for rolling one-step forecasting; default is NULL}
+\item{nwin}{window size for rolling one-step forecasting; default is \code{NULL}}
 
-\item{nboot}{size of bootstrap sample; default is NULL}
+\item{nboot}{size of bootstrap sample; must be a single non-NA integer value
+with \code{nboot > 0}; default is \code{NULL}}
 
-\item{...}{additional arguments of the \emph{ugarchspec} function from the
-\emph{rugarch}-package; the default settings for the arguments
-\emph{variance.model} and \emph{mean.model} are \emph{list(model = 'sGARCH',
-garchOrder = c(1, 1))} and \emph{list(armaOrder = c(0, 0))}, respectively}
+\item{...}{additional arguments of the \code{ugarchspec} function from the
+\code{rugarch}-package; only applied if \code{model = 'GARCH'}; default
+settings for the arguments \code{variance.model} and \code{mean.model} are:
+\describe{
+\item{\code{variance.model} = \code{list(model = 'sGARCH', garchOrder = c(1, 1))}}{}
+\item{\code{mean.model} = \code{list(armaOrder = c(0, 0))}}{}
+}}
 }
 \value{
 Returns a list with the following elements:
@@ -52,7 +58,7 @@ Shortfall (Conditional Value at Risk)}
 }
 \description{
 Computes rolling one-step forecasts of Value at Risk and Expected Shortfall
-(also called Conditional Value at Risk) by means of plain historical
+(Conditional Value at Risk) by means of plain historical
 simulation age- and volatility-weighted historical simulation as well as
 filtered historical simulation.
 }

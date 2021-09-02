@@ -4,11 +4,11 @@
 #' weighted moving average.
 #'
 #' @param x a numeric vector of asset returns
-#' @param lambda decay factor for the calculation of weights; default is 0.94
+#' @param lambda decay factor for the calculation of weights; default is \code{0.94}
 #'
 #' @export
 #'
-#' @return Returns a numerical vector \emph{vol} that contains the computed
+#' @return Returns a numerical vector \code{vol} that contains the computed
 #' volatility.
 #'
 #' @examples

@@ -4,23 +4,29 @@
 \alias{fhs}
 \title{Filtered historical simulation}
 \usage{
-fhs(x, p = 0.975, model = c("EWMA", "GARCH"), lambda = 0.94, nboot = 5000, ...)
+fhs(x, p = 0.975, model = c("EWMA", "GARCH"), lambda = 0.94, nboot = NULL, ...)
 }
 \arguments{
 \item{x}{a numeric vector of asset returns}
 
-\item{p}{confidence level for VaR calculation; default is 0.975}
+\item{p}{confidence level for VaR calculation; default is \code{0.975}}
 
-\item{model}{model for estimating conditional volatility; default is 'EWMA'}
+\item{model}{model for estimating conditional volatility; options are \code{'EWMA'}
+and \code{'GARCH'}; if \code{model = 'GARCH'}, additional arguments can be adjusted
+via \code{...}; default is \code{'EWMA'}}
 
-\item{lambda}{decay factor for the calculation of weights; default is 0.94}
+\item{lambda}{decay factor for the calculation of weights; default is \code{0.94}}
 
-\item{nboot}{size of bootstrap sample; default is NULL}
+\item{nboot}{size of bootstrap sample; must be a single non-NA integer value
+with \code{nboot > 0}; default is \code{NULL}}
 
-\item{...}{additional arguments of the \emph{ugarchspec} function from the
-\emph{rugarch}-package; the default settings for the arguments
-\emph{variance.model} and \emph{mean.model} are \emph{list(model = 'sGARCH',
-garchOrder = c(1, 1))} and \emph{list(armaOrder = c(0, 0))}, respectively}
+\item{...}{additional arguments of the \code{ugarchspec} function from the
+\code{rugarch}-package; only applied if \code{model = 'GARCH'}; default
+settings for the arguments \code{variance.model} and \code{mean.model} are:
+\describe{
+\item{\code{variance.model} = \code{list(model = 'sGARCH', garchOrder = c(1, 1))}}{}
+\item{\code{mean.model} = \code{list(armaOrder = c(0, 0))}}{}
+}}
 }
 \value{
 Returns a list with the following elements:
@@ -28,13 +34,13 @@ Returns a list with the following elements:
 \item{VaR}{Calculated Value at Risk}
 \item{ES}{Calculated Expected Shortfall (Conditional Value at Risk)}
 \item{garchmod}{The model fit. Is the respective GARCH fit for
-\emph{model = "GARCH"} (see \emph{rugarch} documentation) and  'EWMA' for
-\emph{model = "EWMA"}}
+\code{model = "GARCH"} (see \code{rugarch} documentation) and  \code{'EWMA'} for
+\code{model = "EWMA"}}
 }
 }
 \description{
-Calculates univariate Value at Risk and Expected Shortfall (also called
-Conditional Value at Risk) by means of filtered historical simulation.
+Calculates univariate Value at Risk and Expected Shortfall (Conditional
+Value at Risk) by means of filtered historical simulation.
 Volatility can be estimated with an exponentially weighted moving
 average or a GARCH-type model.
 }
@@ -44,9 +50,9 @@ returns <- diff(log(prices))
 # volatility weighting via EWMA
 ewma <- fhs(x = returns, p = 0.975, model = "EWMA", lambda = 0.94,
             nboot = 10000)
-ewma$VaR_ES
+ewma
 # volatility weighting via GARCH
 garch <- fhs(x = returns, p = 0.975, model = "GARCH", variance.model =
 list(model = "sGARCH"), nboot = 10000)
-garch$VaR_ES
+garch
 }

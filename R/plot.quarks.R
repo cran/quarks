@@ -3,7 +3,7 @@
 #' This function regulates how objects created by the package quarks are
 #' plotted.
 #'
-#' @param x an input object of class \emph{quarks}.
+#' @param x an input object of class \code{quarks}.
 #' @param ... additional arguments of the standard plot method.
 #'
 #' @export
@@ -20,13 +20,27 @@ plot.quarks <- function(x, ...) {
     ES.plot <- ifelse(-x[["xout"]] >= x[["ES"]], x[["ES"]], NA)
 
     dots[["y"]] <- cbind(-x[["xout"]], x[["VaR"]], x[["ES"]], VaR.plot, ES.plot)
-    dots[["col"]] <- c("darkgrey", "red", "green", "blue", "black")
-    dots[["type"]] <- "hllpp"
+    if (is.null(dots[["col"]])) {
+      dots[["col"]] <- c("darkgrey", "red", "green", "blue", "black")
+    }
+    if (is.null(dots[["type"]])) {
+      dots[["type"]] <- "hllpp"
+    }
+    if (is.null(dots[["lty"]])) {
     dots[["lty"]] <- c(1, 5, 5)
+    }
+    if (is.null(dots[["pch"]])) {
     dots[["pch"]] <- 1
+    }
+    if (is.null(dots[["xlab"]])) {
     dots[["xlab"]] <- "out-of-sample observations"
+    }
+    if (is.null(dots[["ylab"]])) {
     dots[["ylab"]] <- "Negative returns, VaR and ES"
-    dots[["main"]] <- "VaR (red) and ES (green) - (rolling) one-step forecasts"
+    }
+    if (is.null(dots[["main"]])) {
+    dots[["main"]] <- "VaR (red) and ES (green) - one-step forecasts"
+    }
 
     do.call(what = graphics::matplot, args = dots)
   }

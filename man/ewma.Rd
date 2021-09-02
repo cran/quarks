@@ -9,10 +9,10 @@ ewma(x, lambda = 0.94)
 \arguments{
 \item{x}{a numeric vector of asset returns}
 
-\item{lambda}{decay factor for the calculation of weights; default is 0.94}
+\item{lambda}{decay factor for the calculation of weights; default is \code{0.94}}
 }
 \value{
-Returns a numerical vector \emph{vol} that contains the computed
+Returns a numerical vector \code{vol} that contains the computed
 volatility.
 }
 \description{

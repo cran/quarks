@@ -9,11 +9,11 @@ hs(x, p = 0.975, method = c("age", "plain"), lambda = 0.98)
 \arguments{
 \item{x}{a numeric vector of asset returns}
 
-\item{p}{confidence level for VaR calculation; default is 0.975}
+\item{p}{confidence level for VaR calculation; default is \code{0.975}}
 
-\item{method}{method to be used for calculation; default is 'plain'}
+\item{method}{method to be used for calculation; default is \code{'plain'}}
 
-\item{lambda}{decay factor for the calculation of weights; default is 0.98}
+\item{lambda}{decay factor for the calculation of weights; default is \code{0.98}}
 }
 \value{
 Returns a list with the following elements:
@@ -23,7 +23,7 @@ Returns a list with the following elements:
 }
 }
 \description{
-Computes Value at Risk and Expected Shortfall (also called Conditional Value
+Computes Value at Risk and Expected Shortfall (Conditional Value
 at Risk) by means of plain and age-weighted historical simulation.
 }
 \examples{

@@ -1,18 +1,18 @@
 #' Volatility weighted historical simulation
 #'
-#' Calculates univariate Value at Risk and Expected Shortfall (also called
-#' Conditional Value at Risk) by means of volatility weighted historical
-#' simulation. Volatility can be estimated with an exponentially weighted
-#' moving average or a GARCH-type model.
+#' Calculates univariate Value at Risk and Expected Shortfall (Conditional
+#' Value at Risk) by means of volatility weighted historical simulation.
+#' Volatility can be estimated with an exponentially weighted moving average
+#' or a GARCH-type model.
 #'
 #' @param x a numeric vector of asset returns
-#' @param p confidence level for VaR calculation; default is 0.975
-#' @param model model for estimating conditional volatility; default is 'EWMA'
-#' @param lambda decay factor for the calculation of weights; default is 0.94
-#' @param ... additional arguments of the \emph{ugarchspec} function from the
-#' \emph{rugarch}-package; the default settings for the arguments
-#' \emph{variance.model} and \emph{mean.model} are \emph{list(model = 'sGARCH',
-#' garchOrder = c(1, 1))} and \emph{list(armaOrder = c(0, 0))}, respectively
+#' @param p confidence level for VaR calculation; default is \code{0.975}
+#' @param model model for estimating conditional volatility; default is \code{'EWMA'}
+#' @param lambda decay factor for the calculation of weights; default is \code{0.94}
+#' @param ... additional arguments of the \code{ugarchspec} function from the
+#' \code{rugarch}-package; the default settings for the arguments
+#' \code{variance.model} and \code{mean.model} are \code{list(model = 'sGARCH',
+#' garchOrder = c(1, 1))} and \code{list(armaOrder = c(0, 0))}, respectively
 #'
 #' @export
 #'
@@ -21,19 +21,19 @@
 #' \item{VaR}{Calculated Value at Risk}
 #' \item{ES}{Calculated Expected Shortfall (Conditional Value at Risk)}
 #' \item{garchmod}{The model fit. Is the respective GARCH fit for
-#' \emph{model = "GARCH"} (see \emph{rugarch} documentation) and  'EWMA' for
-#' \emph{model = "EWMA"}}
+#' \code{model = 'GARCH'} (see \code{rugarch} documentation) and  \code{'EWMA'} for
+#' \code{model = 'EWMA'}}
 #' }
 #' @examples
 #' prices <- DAX30$price.close
 #' returns <- diff(log(prices))
 #' # volatility weighting via EWMA
 #' ewma <- vwhs(x = returns, p = 0.975, model = "EWMA", lambda = 0.94)
-#' ewma$VaR_ES
+#' ewma
 #' # volatility weighting via GARCH
 #' garch <- vwhs(x = returns, p = 0.975, model = "GARCH", variance.model =
 #' list(model = "sGARCH"))
-#' garch$VaR_ES
+#' garch
 
 vwhs <- function(x, p = 0.975, model = c("EWMA", "GARCH"), lambda = 0.94, ...)
     {
@@ -74,11 +74,8 @@ vwhs <- function(x, p = 0.975, model = c("EWMA", "GARCH"), lambda = 0.94, ...)
     n <- length(x)
     xz <- x/csig
     loss <- -(xz * csig[n])
-    VaR <- stats::quantile(loss, p)
+    VaR <- unname(stats::quantile(loss, p))
     ES <- mean(loss[loss > VaR])
-    results <- cbind(VaR = VaR, ES = ES)
-    colnames(results) <- c("VaR", "ES")
-    rownames(results) <- paste0(100 * p, "%")
-    results <- list(VaR_ES = results, garchmod = fit)
+    results <- list(VaR = VaR, ES = ES, garchmod = fit)
     results
 }
