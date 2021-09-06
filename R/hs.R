@@ -57,7 +57,8 @@ hs <- function(x, p = 0.975, method = c("age", "plain"), lambda = 0.98) {
         VaR.low <- l[ind.low]
         VaR <- VaR.low + (p - pcum[ind.low]) * (VaR.high - VaR.low) /
             (pcum[ind.high] - pcum[ind.low])
-        w.ES <- w[which(l > VaR)]
+        ind.ES <- l.ind[which(l > VaR)]
+        w.ES <- w[ind.ES]
         w.ES <- w.ES / sum(w.ES)
         l.ES <- l[l > VaR]
         ES <- sum(l.ES * w.ES)

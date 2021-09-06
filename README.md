@@ -94,5 +94,5 @@ plot(results6)
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
-To further analyze these results one might apply e.g. the traffic light
-test to assess the performance of these methods.
+To further analyze these results one might apply the traffic light test
+to assess the performance of these methods.
