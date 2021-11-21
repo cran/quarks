@@ -30,11 +30,17 @@
 #'
 #' @return Returns a list with the following elements:
 #' \describe{
-#' \item{VaR}{numerical vector containing out-of-sample forecasts of Value at
+#' \item{VaR}{Numerical vector containing out-of-sample forecasts of Value at
 #' Risk}
-#' \item{ES}{numerical vector containing out-of-sample forecasts of Expected
+#' \item{ES}{Numerical vector containing out-of-sample forecasts of Expected
 #' Shortfall (Conditional Value at Risk)}
-#' \item{xout}{numerical vector containing out-of-sample returns}
+#' \item{xout}{Numerical vector containing out-of-sample returns}
+#' \item{p}{Confidence level for VaR calculation}
+#' \item{model}{Model for estimating conditional volatility}
+#' \item{method}{Method to be used for calculation}
+#' \item{nout}{Number of out-of-sample observations}
+#' \item{nwin}{Window size for rolling one-step forecasting}
+#' \item{nboot}{Size of bootstrap sample}
 #' }
 #' @examples
 #'
@@ -69,7 +75,7 @@
 #'   xlab = 'number of out-of-sample obs.', ylab = 'losses, VaR and ES',
 #'   main = 'Vol. weighted HS (EWMA) - 97.5% VaR and ES for the DAX30 return
 #'   series')
-#' \dontrun{
+#' \donttest{
 #' ### Example 4 - volatility weighted historical simulation - GARCH
 #' results4 <- rollcast(x = returns, p = 0.975, model = 'GARCH',
 #'                      method = 'vwhs', nout = nout, nwin = nwin)
@@ -87,7 +93,7 @@
 #'   xlab = 'number of out-of-sample obs.', ylab = 'losses, VaR and ES',
 #'   main = 'Filtered HS (EWMA) - 97.5% VaR and ES for the DAX30 return
 #'   series')
-#' \dontrun{
+#' \donttest{
 #' ### Example 6 - filtered historical simulation - GARCH
 #' results6 <- rollcast(x = returns, p = 0.975, model = 'GARCH',
 #'                      method = 'fhs', nout = nout, nwin = nwin, nboot = 10000)
@@ -142,13 +148,15 @@ rollcast <- function(x, p = 0.975, model = c("EWMA", "GARCH"),
     }
     if (!(length(model) %in% c(1, 2)) || !all(!is.na(model)) ||
         !is.character(model) || !all(model %in% c("EWMA", "GARCH"))) {
-        stop("A single character value must be passed to 'model'.",
+        stop("A single character value must be passed to 'model'. ",
               "Valid choices are 'EWMA' or 'GARCH'.")
     }
 
 
     if (all(method == c("plain", "age", "vwhs", "fhs")))
         method <- "plain"
+    if (method != "fhs")
+        nboot = "N/A"
     if (all(lambda == c(0.94, 0.98)) && method == "age")
         lambda <- 0.98
     if (all(lambda == c(0.94, 0.98)) && method == "vwhs" || method == "fhs")
@@ -251,7 +259,16 @@ rollcast <- function(x, p = 0.975, model = c("EWMA", "GARCH"),
     }
     VaR <- fcasts[, 1]
     ES <- fcasts[, 2]
-    results <- list(VaR = VaR, ES = ES, xout = xout)
+
+    if (model == "GARCH" && method %in% c("vwhs", "fhs"))
+        model <- list(...)$variance.model$model
+    if (is.null(model))
+        model <- "sGARCH"
+    if (method %in% c("plain", "age"))
+        model <- "EWMA"
+
+    results <- list(VaR = VaR, ES = ES, xout = xout, p = p, model = model,
+                    method = method, nout = nout, nwin = nwin, nboot = nboot)
 
     class(results) <- "quarks"
     attr(results, "function") <- "rollcast"

@@ -25,6 +25,7 @@ Returns a list with the following elements:
 \describe{
 \item{VaR}{Calculated Value at Risk}
 \item{ES}{Calculated Expected Shortfall (Conditional Value at Risk)}
+\item{p}{Confidence level for VaR calculation}
 \item{garchmod}{The model fit. Is the respective GARCH fit for
 \code{model = 'GARCH'} (see \code{rugarch} documentation) and  \code{'EWMA'} for
 \code{model = 'EWMA'}}

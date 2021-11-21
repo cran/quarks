@@ -49,11 +49,17 @@ settings for the arguments \code{variance.model} and \code{mean.model} are:
 \value{
 Returns a list with the following elements:
 \describe{
-\item{VaR}{numerical vector containing out-of-sample forecasts of Value at
+\item{VaR}{Numerical vector containing out-of-sample forecasts of Value at
 Risk}
-\item{ES}{numerical vector containing out-of-sample forecasts of Expected
+\item{ES}{Numerical vector containing out-of-sample forecasts of Expected
 Shortfall (Conditional Value at Risk)}
-\item{xout}{numerical vector containing out-of-sample returns}
+\item{xout}{Numerical vector containing out-of-sample returns}
+\item{p}{Confidence level for VaR calculation}
+\item{model}{Model for estimating conditional volatility}
+\item{method}{Method to be used for calculation}
+\item{nout}{Number of out-of-sample observations}
+\item{nwin}{Window size for rolling one-step forecasting}
+\item{nboot}{Size of bootstrap sample}
 }
 }
 \description{
@@ -95,7 +101,7 @@ matplot(1:nout, cbind(-results3$xout, results3$VaR, results3$ES),
   xlab = 'number of out-of-sample obs.', ylab = 'losses, VaR and ES',
   main = 'Vol. weighted HS (EWMA) - 97.5\% VaR and ES for the DAX30 return
   series')
-\dontrun{
+\donttest{
 ### Example 4 - volatility weighted historical simulation - GARCH
 results4 <- rollcast(x = returns, p = 0.975, model = 'GARCH',
                      method = 'vwhs', nout = nout, nwin = nwin)
@@ -113,7 +119,7 @@ matplot(1:nout, cbind(-results5$xout, results5$VaR, results5$ES),
   xlab = 'number of out-of-sample obs.', ylab = 'losses, VaR and ES',
   main = 'Filtered HS (EWMA) - 97.5\% VaR and ES for the DAX30 return
   series')
-\dontrun{
+\donttest{
 ### Example 6 - filtered historical simulation - GARCH
 results6 <- rollcast(x = returns, p = 0.975, model = 'GARCH',
                      method = 'fhs', nout = nout, nwin = nwin, nboot = 10000)

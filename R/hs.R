@@ -14,6 +14,7 @@
 #' \describe{
 #' \item{VaR}{Calculated Value at Risk}
 #' \item{ES}{Calculated Expected Shortfall (Conditional Value at Risk)}
+#' \item{p}{Confidence level for VaR calculation}
 #' }
 #' @examples
 #' prices <- DAX30$price.close
@@ -63,6 +64,6 @@ hs <- function(x, p = 0.975, method = c("age", "plain"), lambda = 0.98) {
         l.ES <- l[l > VaR]
         ES <- sum(l.ES * w.ES)
     }
-    results <- list(VaR = VaR, ES = ES)
+    results <- list(VaR = VaR, ES = ES, p = p)
     results
 }

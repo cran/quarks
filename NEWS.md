@@ -1,3 +1,7 @@
+# quarks 1.0.10
+
+- added a print method for 'quarks'
+
 # quarks 1.0.9
 
 - fixed a bug in 'hs.R'

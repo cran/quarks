@@ -27,6 +27,7 @@
 #' \describe{
 #' \item{VaR}{Calculated Value at Risk}
 #' \item{ES}{Calculated Expected Shortfall (Conditional Value at Risk)}
+#' \item{p}{Confidence level for VaR calculation}
 #' \item{garchmod}{The model fit. Is the respective GARCH fit for
 #' \code{model = "GARCH"} (see \code{rugarch} documentation) and  \code{'EWMA'} for
 #' \code{model = "EWMA"}}
@@ -89,11 +90,11 @@ fhs <- function(x, p = 0.975, model = c("EWMA", "GARCH"), lambda = 0.94,
     one.ahead.csig <- sqrt(one.ahead.cvar)
     fit = "EWMA"
   }
-  xz <- x/csig
+  xz <- x / csig
   boot.xz <- sample(xz, size = nboot, replace = TRUE)
   boot.loss <- -(boot.xz * one.ahead.csig)
   VaR <- unname(stats::quantile(boot.loss, p))
   ES <- mean(boot.loss[boot.loss > VaR])
-  results <- list(VaR = VaR, ES = ES, garchmod = fit)
+  results <- list(VaR = VaR, ES = ES, p = p, garchmod = fit)
   results
 }

@@ -20,6 +20,7 @@ Returns a list with the following elements:
 \describe{
 \item{VaR}{Calculated Value at Risk}
 \item{ES}{Calculated Expected Shortfall (Conditional Value at Risk)}
+\item{p}{Confidence level for VaR calculation}
 }
 }
 \description{
