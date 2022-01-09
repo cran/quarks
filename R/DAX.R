@@ -1,9 +1,9 @@
 #' German Stock Market Index (DAX) Financial Time Series Data
 #'
 #' A dataset that contains the daily financial data of the DAX from
-#' 2000 to December 2020 (currency in EUR).
+#' 2000 to December 2021 (currency in EUR).
 #'
-#' @format A data frame with 5327 rows and 10 variables:
+#' @format A data frame with 5582 rows and 10 variables:
 #' \describe{
 #'   \item{price.open}{opening price (daily)}
 #'   \item{price.high}{highest price (daily)}
@@ -17,4 +17,4 @@
 #'   \item{ret.closing.prices}{returns obtained from the closing prices}
 #' }
 #' @source The data was obtained from Yahoo Finance.
-"DAX30"
+"DAX"

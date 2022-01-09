@@ -5,7 +5,7 @@
 \alias{SP500}
 \title{Standard and Poor`s (SP500) Financial Time Series Data}
 \format{
-A data frame with 5284 rows and 10 variables:
+A data frame with 5535 rows and 10 variables:
 \describe{
   \item{price.open}{opening price (daily)}
   \item{price.high}{highest price (daily)}
@@ -27,6 +27,6 @@ SP500
 }
 \description{
 A dataset that contains the daily financial data of the SP500 from
-2000 to December 2020 (currency in EUR).
+2000 to December 2021 (currency in EUR).
 }
 \keyword{datasets}

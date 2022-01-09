@@ -28,7 +28,7 @@ Computes Value at Risk and Expected Shortfall (Conditional Value
 at Risk) by means of plain and age-weighted historical simulation.
 }
 \examples{
-prices <- DAX30$price.close
+prices <- DAX$price.close
 returns <- diff(log(prices))
 hs(x = returns, p = 0.975, method = 'plain')
 hs(x = returns, p = 0.975, method = 'age', lambda = 0.98)

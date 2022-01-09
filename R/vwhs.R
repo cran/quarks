@@ -26,7 +26,7 @@
 #' \code{model = 'EWMA'}}
 #' }
 #' @examples
-#' prices <- DAX30$price.close
+#' prices <- DAX$price.close
 #' returns <- diff(log(prices))
 #' # volatility weighting via EWMA
 #' ewma <- vwhs(x = returns, p = 0.975, model = "EWMA", lambda = 0.94)
@@ -38,7 +38,7 @@
 
 vwhs <- function(x, p = 0.975, model = c("EWMA", "GARCH"), lambda = 0.94, ...)
     {
-    if (length(x) <= 1 || !all(!is.na(x)) || !is.numeric(x)) {
+    if (length(x) <= 1 || any(is.na(x)) || !is.numeric(x)) {
         stop("A numeric vector of length > 1 and without NAs must be passed to",
              " 'x'.")
     }
@@ -46,7 +46,7 @@ vwhs <- function(x, p = 0.975, model = c("EWMA", "GARCH"), lambda = 0.94, ...)
         stop("The argument 'p' must be a single non-NA double value with ",
              "0 < p < l.")
     }
-    if (!length(model) %in% c(1, 2) || !all(!is.na(model)) ||
+    if (!length(model) %in% c(1, 2) || any(is.na(model)) ||
         !is.character(model) || !all(model %in% c("EWMA", "GARCH"))) {
         stop("A single character value must be passed to 'model'.",
              "Valid choices are 'EWMA' or 'GARCH'.")

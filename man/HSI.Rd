@@ -5,7 +5,7 @@
 \alias{HSI}
 \title{Hang Seng Index (HSI) Financial Time Series Data}
 \format{
-A data frame with 5171 rows and 10 variables:
+A data frame with 5424 rows and 10 variables:
 \describe{
   \item{price.open}{opening price (daily)}
   \item{price.high}{highest price (daily)}
@@ -27,6 +27,6 @@ HSI
 }
 \description{
 A dataset that contains the daily financial data of the HSI from
-2000 to December 2020 (currency in EUR).
+2000 to December 2021 (currency in EUR).
 }
 \keyword{datasets}

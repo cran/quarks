@@ -20,9 +20,9 @@ Estimates volatility of a return series by means of an exponentially
 weighted moving average.
 }
 \examples{
-prices <- DAX30$price.close
+prices <- DAX$price.close
 returns <- diff(log(prices))
-date <- DAX30$ref.date[-1]
+date <- DAX$ref.date[-1]
 cvar <- ewma(x = returns, lambda = 0.94)
 csig <- sqrt(cvar)
 plot(date, csig, type = 'l',

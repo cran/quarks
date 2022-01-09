@@ -23,6 +23,9 @@ plot.quarks <- function(x, ...) {
     if (is.null(dots[["col"]])) {
       dots[["col"]] <- c("darkgrey", "red", "green", "blue", "black")
     }
+    if(is.null(dots[["panel.first"]])) {
+      dots[["panel.first"]] = quote(graphics::grid())
+    }
     if (is.null(dots[["type"]])) {
       dots[["type"]] <- "hllpp"
     }

@@ -17,13 +17,13 @@
 #' \item{p}{Confidence level for VaR calculation}
 #' }
 #' @examples
-#' prices <- DAX30$price.close
+#' prices <- DAX$price.close
 #' returns <- diff(log(prices))
 #' hs(x = returns, p = 0.975, method = 'plain')
 #' hs(x = returns, p = 0.975, method = 'age', lambda = 0.98)
 
 hs <- function(x, p = 0.975, method = c("age", "plain"), lambda = 0.98) {
-    if (length(x) <= 1 || !all(!is.na(x)) || !is.numeric(x)) {
+    if (length(x) <= 1 || any(is.na(x)) || !is.numeric(x)) {
         stop("A numeric vector of length > 1 and without NAs must be passed to",
              " 'x'.")
     }

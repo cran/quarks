@@ -5,7 +5,7 @@
 \alias{NIK225}
 \title{Nikkei Heikin Kabuka Index (NIK) Financial Time Series Data}
 \format{
-A data frame with 5145 rows and 10 variables:
+A data frame with 5391 rows and 10 variables:
 \describe{
   \item{price.open}{opening price (daily)}
   \item{price.high}{highest price (daily)}
@@ -27,6 +27,6 @@ NIK225
 }
 \description{
 A dataset that contains the daily financial data of the NIK from
-2000 to December 2020 (currency in EUR).
+2000 to December 2021 (currency in EUR).
 }
 \keyword{datasets}

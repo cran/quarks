@@ -5,7 +5,7 @@
 \alias{FTSE100}
 \title{Financial Times Stock Exchange Index (FTSE) Financial Time Series Data}
 \format{
-A data frame with 5291 rows and 10 variables:
+A data frame with 5558 rows and 10 variables:
 \describe{
   \item{price.open}{opening price (daily)}
   \item{price.high}{highest price (daily)}
@@ -27,6 +27,6 @@ FTSE100
 }
 \description{
 A dataset that contains the daily financial data of the FTSE from
-2000 to December 2020 (currency in EUR).
+2000 to December 2021 (currency in EUR).
 }
 \keyword{datasets}

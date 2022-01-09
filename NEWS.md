@@ -1,3 +1,10 @@
+# quarks 1.0.11
+
+- slightly adjusted plot method (added a grid)
+- updated data sets
+- changed name of 'DAX30' to 'DAX' due to the recent extension of
+  the German Stock Market Index
+  
 # quarks 1.0.10
 
 - added a print method for 'quarks'
