@@ -5,6 +5,7 @@
 #' simulation age- and volatility-weighted historical simulation as well as
 #' filtered historical simulation.
 #'
+#'
 #' @param x a numeric vector of asset returns
 #' @param p confidence level for VaR calculation; default is \code{0.975}
 #' @param model model for estimating conditional volatility; options are \code{'EWMA'}
@@ -14,10 +15,24 @@
 #' @param lambda decay factor for the calculation of weights; default is \code{0.98}
 #' for \code{method = 'age'} and \code{0.94} for \code{method = 'vwhs'} or
 #' \code{method = 'fhs'}
-#' @param nout number of out-of-sample observations; default is \code{NULL}
-#' @param nwin window size for rolling one-step forecasting; default is \code{NULL}
+#' @param nout number of out-of-sample observations; most recent observations are used;
+#' default is \code{NULL}
+#' @param nwin window size for rolling one-step forecasting; most recent observations
+#' before out-of-sample are used; default is \code{NULL}
 #' @param nboot size of bootstrap sample; must be a single non-NA integer value
 #' with \code{nboot > 0}; default is \code{NULL}
+#' @param smoothscale a character object; defines the smoothing approach
+#' for the unconditional variance from the logarithm of the squared centralized
+#' returns; for \code{smoothscale = 'lpr'}, the unconditional
+#' variance is smoothed via the \code{smoots::gsmooth()} function from the
+#' \code{smoots} package; the bandwidth has to be chosen manually; otherwise the
+#' default is used; if \code{smoothscale = 'auto'}, the function \code{smoots::msmooth()}
+#' is employed and the bandwidth is chosen automatically (data-driven); see the
+#' documentation of the \code{smoots} package for more information; is set to
+#' \code{smoothscale = 'none'} by default
+#' @param smoothopts additional arguments of \code{smoots::gsmooth()} and
+#' \code{smoots::msmooth()}; see the documentation of the \code{smoots}
+#' package for more information; is set to customized default settings
 #' @param ... additional arguments of the \code{ugarchspec} function from the
 #' \code{rugarch}-package; only applied if \code{model = 'GARCH'}; default
 #' settings for the arguments \code{variance.model} and \code{mean.model} are:
@@ -104,10 +119,16 @@
 #'   series')
 #' }
 
-rollcast <- function(x, p = 0.975, model = c("EWMA", "GARCH"),
+rollcast <- function(x, p = 0.975,
+                     model = c("EWMA", "GARCH"),
                      method = c("plain", "age", "vwhs", "fhs"),
-                     lambda = c(0.94, 0.98), nout = NULL, nwin = NULL,
-                     nboot = NULL, ...) {
+                     lambda = c(0.94, 0.98),
+                     nout = NULL,
+                     nwin = NULL,
+                     nboot = NULL,
+                     smoothscale = c("none", "lpr", "auto"),
+                     smoothopts = list(), ...) {
+
     if (length(x) <= 1 || any(is.na(x)) || !is.numeric(x)) {
         stop("A numeric vector of length > 1 and without NAs must be passed to",
              " 'x'.")
@@ -151,6 +172,11 @@ rollcast <- function(x, p = 0.975, model = c("EWMA", "GARCH"),
         stop("A single character value must be passed to 'model'. ",
               "Valid choices are 'EWMA' or 'GARCH'.")
     }
+    if (!(length(smoothscale) %in% c(1, 3)) || any(is.na(smoothscale)) ||
+        !is.character(smoothscale) || !all(smoothscale %in% c("none", "lpr", "auto"))) {
+        stop("A single character value must be passed to 'smoothscale'. ",
+             "Valid choices are 'none', 'lpr' or 'auto'.")
+    }
 
 
     if (all(method == c("plain", "age", "vwhs", "fhs")))
@@ -163,7 +189,29 @@ rollcast <- function(x, p = 0.975, model = c("EWMA", "GARCH"),
         lambda <- 0.94
     if (all(model == c("EWMA", "GARCH")))
         model <- "EWMA"
+    if (all(smoothscale == c("none", "lpr", "auto")))
+        smoothscale <- "none"
+    if (smoothscale == "auto") {
+        if (is.null(smoothopts[["alg"]])) smoothopts[["alg"]] <- "A"
+        if (is.null(smoothopts[["p"]])) smoothopts[["p"]] <- 3
+        message("\n", "Please beware that smoothing of the unconditional ",
+                "scale message(function is still in an experimental stage!", "\n")
+    }
+    if (smoothscale == "lpr") {
+        if (is.null(smoothopts[["b"]])) smoothopts[["b"]] <- 0.15
+        message("\n", "Please beware that smoothing of the unconditional ",
+                "scale function is still in an experimental stage!", "\n")
+    }
+    # defining progress bar
+    pb <- progress::progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsed || Estimated time remaining: :eta]",
+                           total = nout,
+                           complete = "=",
+                           incomplete = "-",
+                           current = ">",
+                           show_after = 0.2,
+                           clear = TRUE)
 
+    ### Main code
     n <- length(x)
     nin <- n - nout
     xin <- x[1:nin]
@@ -173,90 +221,75 @@ rollcast <- function(x, p = 0.975, model = c("EWMA", "GARCH"),
     else{
         xout <- x[(nin + 1):n]
     }
-    xstart <- xin[(nin - nwin + 1):nin]
+
+    xstart <- xcast <- xin[(nin - nwin + 1):nin]
     fcasts <- matrix(NA, max(nout, 1), 2)
-    if (method == "plain") {
-        fcasts[1, ] <- unlist(hs(xstart, p = p, method = method),
-                              use.names = FALSE)[1:2]
-        if (nout > 1) {
-            for (i in 2:nout) {
-                if (i <= nwin) {
-                    fcasts[i, ] <- unlist(hs(c(xstart[i:nwin], xout[1:(i - 1)]),
-                                            p = p, method = method),
-                                          use.names = FALSE)[1:2]
+    sfc <- 1
+
+    switch(method,
+           plain = {
+               fcastfun <- hs
+               funargs <- list(x = xcast, p = p, method = method)
+               },
+           age = {
+               fcastfun <- hs
+               funargs <- list(x = xcast, p = p, method = method, lambda = lambda)
+                },
+           vwhs = {
+               fcastfun <- vwhs
+               funargs <- list(x = xcast, p = p, lambda = lambda,
+                               model = model, ...)
+                },
+           fhs = {
+               fcastfun <- fhs
+               funargs <- list(x = xcast, p = p,
+                               lambda = lambda, nboot = nboot,
+                               model = model, ...)
                 }
-                else{
-                    fcasts[i, ] <- unlist(hs(xout[(i - nwin):(i - 1)], p = p,
-                                             method = method),
-                                          use.names = FALSE)[1:2]
-                }
-            }
-        }
+           )
+
+    if (smoothscale %in% c("lpr", "auto")) {
+        npest <- smooth.help(x = xstart, smoothscale = smoothscale,
+                             smoothopts = smoothopts)
+        xcast <- npest[["xstd"]]
+        sfc <- npest[["sfc"]]
     }
-    if (method == "age") {
-        fcasts[1, ] <- unlist(hs(xstart, p = p, method = method, lambda = lambda),
-                              use.names = FALSE)[1:2]
-        if (nout > 1) {
-            for (i in 2:nout) {
-                if (i <= nwin) {
-                    fcasts[i, ] <- unlist(hs(c(xstart[i:nwin], xout[1:(i - 1)]),
-                                             p = p, method = method,
-                                             lambda = lambda),
-                                          use.names = FALSE)[1:2]
+
+    fcasts[1, ] <- as.double(unlist(do.call(what = fcastfun, args = funargs),
+                          use.names = FALSE)[1:2]) * sfc
+    if (nout > 1) {
+        for (i in 2:nout) {
+            pb$tick() # progress bar
+            if (i <= nwin) {
+                xcast <- c(xstart[i:nwin], xout[1:(i - 1)])
+                funargs[["x"]] = xcast
+                if (smoothscale %in% c("lpr", "auto")) {
+                    npest <- smooth.help(x = xcast, smoothscale = smoothscale,
+                                         smoothopts = smoothopts)
+                    xcast <- npest[["xstd"]]
+                    sfc <- npest[["sfc"]]
                 }
-                else{
-                    fcasts[i, ] <- unlist(hs(xout[(i - nwin):(i - 1)], p = p,
-                                             method = method, lambda = lambda),
-                                          use.names = FALSE)[1:2]
-                }
+                fcasts[i, ] <- as.double(unlist(do.call(what = fcastfun, args = funargs),
+                                      use.names = FALSE)[1:2]) * sfc
             }
-        }
-    }
-    if (method == "vwhs") {
-        fcasts[1, ] <- as.double(unlist(vwhs(xstart, p = p, lambda = lambda,
-                                   model = model, ...),
-                              use.names = FALSE)[1:2])
-        if (nout > 1) {
-            for (i in 2:nout) {
-                if (i <= nwin) {
-                    fcasts[i, ] <- as.double(unlist(vwhs(c(xstart[i:nwin],
-                                               xout[1:(i - 1)]), p = p,
-                                               lambda = lambda,
-                                               model = model, ...),
-                                          use.names = FALSE)[1:2])
+            if (i > nwin) {
+                xcast <- xout[(i - nwin):(i - 1)]
+                funargs[["x"]] = xcast
+                if (smoothscale %in% c("lpr", "auto")) {
+                    npest <- smooth.help(x = xcast, smoothscale = smoothscale,
+                                         smoothopts = smoothopts)
+                    xcast <- npest[["xstd"]]
+                    sfc <- npest[["sfc"]]
                 }
-                else{
-                    fcasts[i, ] <- as.double(unlist(vwhs(xout[(i - nwin):(i - 1)], p = p,
-                                               lambda = lambda, model = model,
-                                               ...),
-                                          use.names = FALSE)[1:2])
-                }
+                fcasts[i, ] <- as.double(unlist(do.call(what = fcastfun, args = funargs),
+                                      use.names = FALSE)[1:2]) * sfc
             }
         }
     }
 
-    if (method == "fhs") {
-        fcasts[1, ] <- as.double(unlist(fhs(xstart, p = p, lambda = lambda,
-                                  nboot = nboot, model = model, ...),
-                              use.names = FALSE)[1:2])
-        if (nout > 1) {
-            for (i in 2:nout) {
-                if (i <= nwin) {
-                    fcasts[i, ] <- as.double(unlist(fhs(c(xstart[i:nwin],
-                                              xout[1:(i - 1)]), p = p,
-                                              lambda = lambda, nboot = nboot,
-                                              model = model, ...),
-                                         use.names = FALSE)[1:2])
-                }
-                else{
-                    fcasts[i, ] <- as.double(unlist(fhs(xout[(i - nwin):(i - 1)], p = p,
-                                              lambda = lambda, nboot = nboot,
-                                              model = model, ...),
-                                         use.names = FALSE)[1:2])
-                }
-            }
-        }
-    }
+    pb$terminate(); invisible() # terminate progress bar
+
+
     VaR <- fcasts[, 1]
     ES <- fcasts[, 2]
 
@@ -269,6 +302,8 @@ rollcast <- function(x, p = 0.975, model = c("EWMA", "GARCH"),
 
     results <- list(VaR = VaR, ES = ES, xout = xout, p = p, model = model,
                     method = method, nout = nout, nwin = nwin, nboot = nboot)
+
+    message("\n", "Calculations completed.", "\n")
 
     class(results) <- "quarks"
     attr(results, "function") <- "rollcast"

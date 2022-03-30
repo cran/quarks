@@ -48,7 +48,10 @@ returns <- diff(log(prices))
 ``` r
 results1 <- rollcast(x = returns, p = 0.975, method = 'plain', nout = 250,
                      nwin = 250)
+#> 
+#> Calculations completed.
 results1
+#>  
 #> --------------------------------------------
 #> |              Specifications              |
 #> --------------------------------------------
@@ -79,12 +82,17 @@ plot(results1)
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
+------------------------------------------------------------------------
+
 **Example 2 - age weighted historical simulation**
 
 ``` r
 results2 <- rollcast(x = returns, p = 0.975, method = 'age', nout = 250,
                      nwin = 250)
+#> 
+#> Calculations completed.
 results2
+#>  
 #> --------------------------------------------
 #> |              Specifications              |
 #> --------------------------------------------
@@ -113,12 +121,17 @@ plot(results2)
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
+------------------------------------------------------------------------
+
 **Example 3 - volatility weighted historical simulation - EWMA**
 
 ``` r
 results3 <- rollcast(x = returns, p = 0.975, model = 'EWMA',
                      method = 'vwhs', nout = 250, nwin = 250)
+#> 
+#> Calculations completed.
 results3
+#>  
 #> --------------------------------------------
 #> |              Specifications              |
 #> --------------------------------------------
@@ -147,82 +160,18 @@ plot(results3)
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
-**Example 4 - volatility weighted historical simulation - GARCH**
+------------------------------------------------------------------------
+
+**Example 4 - filtered historical simulation - GARCH**
 
 ``` r
+set.seed(12345)
 results4 <- rollcast(x = returns, p = 0.975, model = 'GARCH',
-                     method = 'vwhs', nout = 250, nwin = 250)
+                     method = 'fhs', nout = 250, nwin = 250, nboot = 10000)
+#> 
+#> Calculations completed.
 results4
-#> --------------------------------------------
-#> |              Specifications              |
-#> --------------------------------------------
-#>  Out-of-sample size:    250
-#>  Rolling window size:   250
-#>  Bootstrap sample size: N/A
-#>  Confidence level:      97.5 %
-#>  Method:                Volatility Weighting
-#>  Model:                 sGARCH
-#> --------------------------------------------
-#> |           Forecast performance           |
-#> --------------------------------------------
-#>  Out-of-sample losses exceeding VaR
 #>  
-#>  Number of breaches:    5
-#> --------------------------------------------
-#>  Out-of-sample losses exceeding ES
-#>  
-#>  Number of breaches:    3
-#> --------------------------------------------
-```
-
-``` r
-plot(results4)
-```
-
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
-
-**Example 5 - filtered historical simulation - EWMA**
-
-``` r
-set.seed(12345)
-results5 <- rollcast(x = returns, p = 0.975, model = 'EWMA',
-                     method = 'fhs', nout = 250, nwin = 250, nboot = 10000)
-results5
-#> --------------------------------------------
-#> |              Specifications              |
-#> --------------------------------------------
-#>  Out-of-sample size:    250
-#>  Rolling window size:   250
-#>  Bootstrap sample size: 10000
-#>  Confidence level:      97.5 %
-#>  Method:                Filtered
-#>  Model:                 EWMA
-#> --------------------------------------------
-#> |           Forecast performance           |
-#> --------------------------------------------
-#>  Out-of-sample losses exceeding VaR
-#>  
-#>  Number of breaches:    4
-#> --------------------------------------------
-#>  Out-of-sample losses exceeding ES
-#>  
-#>  Number of breaches:    3
-#> --------------------------------------------
-```
-
-``` r
-plot(results5)
-```
-
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
-
-**Example 6 - filtered historical simulation - GARCH**
-
-``` r
-set.seed(12345)
-results6 <- rollcast(x = returns, p = 0.975, model = 'GARCH',
-                     method = 'fhs', nout = 250, nwin = 250, nboot = 10000)
-results6
 #> --------------------------------------------
 #> |              Specifications              |
 #> --------------------------------------------
@@ -246,35 +195,146 @@ results6
 ```
 
 ``` r
-plot(results6)
+plot(results4)
 ```
 
-<img src="man/figures/README-unnamed-chunk-14-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
 
-To further analyze these results one might apply backtesting to assess
-the performance of these methods.
+To assess the performance of these methods one might apply backtesting.
+
+For instance, by employing the Traffic Light Test, Coverage Tests or by
+means of Loss Function.
+
+**Example 5 - Traffic Light Test**
+
+``` r
+# Calculating the returns
+prices <- SP500$price.close
+returns <- diff(log(prices))
+
+results <- rollcast(x = returns, p = 0.99, model = 'GARCH',
+                     method = 'vwhs', nout = 250, nwin = 500)
+#> 
+#> Calculations completed.
+trftest(results)
+#>  
+#> --------------------------------------------
+#> |            Backtesting result            |
+#> --------------------------------------------
+#>  Method: Volatility Weighting
+#>  Model:  sGARCH
+#> --------------------------------------------
+#> |       Traffic light zone boundaries      |
+#> --------------------------------------------
+#>  Zone         Probability      
+#>  Green zone:  p < 95%          
+#>  Yellow zone: 95% <= p < 99.99%
+#>  Red zone:    p >= 99.99%      
+#>  
+#> --------------------------------------------
+#> |            Test - 99%-VaR              |
+#> --------------------------------------------
+#>  Number of violations: 3
+#>  p = 0.7581: Green zone
+#> --------------------------------------------
+```
+
+**Example 6 - Coverage Tests**
+
+``` r
+# Calculating the returns
+prices <- HSI$price.close
+returns <- diff(log(prices))
+
+results <- rollcast(x = returns, p = 0.99, model = 'GARCH',
+                     method = 'vwhs', nout = 250, nwin = 500)
+#> 
+#> Calculations completed.
+cvgtest(results)
+#>  
+#> --------------------------------------------
+#> |               Test results               |
+#> --------------------------------------------
+#>  
+#> --------------------------------------------
+#> |        Unconditional coverage test       |
+#> --------------------------------------------
+#> H0: w = 0.99
+#> p_[uc] = 0.753
+#>  
+#> --------------------------------------------
+#> |            Independence test             |
+#> --------------------------------------------
+#>  
+#> H0: w_[00] = w[10]
+#> p_[ind] = 0.0198
+#>  
+#> --------------------------------------------
+#> |         Conditional coverage test        |
+#> --------------------------------------------
+#>  
+#> H0: w_[00] = w_[10] = 0.99
+#> p_[cc] = 0.0632
+#> --------------------------------------------
+```
+
+**Example 6 - Coverage Tests**
+
+``` r
+# Calculating the returns
+prices <- FTSE100$price.close
+returns <- diff(log(prices))
+
+results <- rollcast(x = returns, p = 0.99, model = 'GARCH',
+                     method = 'vwhs', nout = 250, nwin = 500)
+#> 
+#> Calculations completed.
+lossfun(results)
+#> 
+#> Please note that the following results are multiplied with 10000.
+#> $lossfunc1
+#> [1] 2.27884
+#> 
+#> $lossfunc2
+#> [1] 10.84525
+#> 
+#> $lossfunc3
+#> [1] 10.99533
+#> 
+#> $lossfunc4
+#> [1] 10.2165
+```
+
+------------------------------------------------------------------------
 
 ## Functions
 
-In `quarks` five functions are available.
+In `quarks` six functions are available.
 
-**Functions - version 1.0.11:**
+**Functions - version 1.0.12:**
 
+-   `cvgtest`: Applies various coverage tests to Value at Risk
 -   `ewma`: Estimates volatility of a return series by means of an
     exponentially weighted moving average
 -   `fhs`: Calculates univariate Value at Risk and Expected Shortfall by
     means of filtered historical simulation
 -   `hs`: Computes Value at Risk and Expected Shortfall by means of
-    plain and age-weighted historical simulation.
+    plain and age-weighted historical simulation
+-   `lossfun`: Calculates of loss functions of ES
+-   `plop`: Profit & Loss operator function; Calculates weighted
+    portfolio returns or losses
 -   `rollcast`: Computes rolling one-step-ahead forecasts of Value at
     Risk and Expected Shortfall
+-   `trftest`: Applies the Traffic Light Test to Value at Risk
 -   `vwhs`: Calculates univariate Value at Risk and Expected Shortfall
     by means of volatility weighted historical simulation
 
 For further information on each of the functions, we refer the user to
 the manual or the package documentation.
 
-**Data Sets**
+------------------------------------------------------------------------
+
+## Data Sets
 
 -   `DAX`: Daily financial time series data of the German Stock Market
     Index (DAX) from January 2000 to December 2021

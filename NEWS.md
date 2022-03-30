@@ -1,3 +1,8 @@
+# quarks 1.1.0
+
+- implemented 4 new functions which enable the user to apply various
+  backtesting methods
+  
 # quarks 1.0.11
 
 - slightly adjusted plot method (added a grid)

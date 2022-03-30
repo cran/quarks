@@ -13,6 +13,8 @@ rollcast(
   nout = NULL,
   nwin = NULL,
   nboot = NULL,
+  smoothscale = c("none", "lpr", "auto"),
+  smoothopts = list(),
   ...
 )
 }
@@ -31,12 +33,28 @@ via \code{...}; default is \code{'EWMA'}}
 for \code{method = 'age'} and \code{0.94} for \code{method = 'vwhs'} or
 \code{method = 'fhs'}}
 
-\item{nout}{number of out-of-sample observations; default is \code{NULL}}
+\item{nout}{number of out-of-sample observations; most recent observations are used;
+default is \code{NULL}}
 
-\item{nwin}{window size for rolling one-step forecasting; default is \code{NULL}}
+\item{nwin}{window size for rolling one-step forecasting; most recent observations
+before out-of-sample are used; default is \code{NULL}}
 
 \item{nboot}{size of bootstrap sample; must be a single non-NA integer value
 with \code{nboot > 0}; default is \code{NULL}}
+
+\item{smoothscale}{a character object; defines the smoothing approach
+for the unconditional variance from the logarithm of the squared centralized
+returns; for \code{smoothscale = 'lpr'}, the unconditional
+variance is smoothed via the \code{smoots::gsmooth()} function from the
+\code{smoots} package; the bandwidth has to be chosen manually; otherwise the
+default is used; if \code{smoothscale = 'auto'}, the function \code{smoots::msmooth()}
+is employed and the bandwidth is chosen automatically (data-driven); see the
+documentation of the \code{smoots} package for more information; is set to
+\code{smoothscale = 'none'} by default}
+
+\item{smoothopts}{additional arguments of \code{smoots::gsmooth()} and
+\code{smoots::msmooth()}; see the documentation of the \code{smoots}
+package for more information; is set to customized default settings}
 
 \item{...}{additional arguments of the \code{ugarchspec} function from the
 \code{rugarch}-package; only applied if \code{model = 'GARCH'}; default

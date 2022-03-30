@@ -1,8 +1,8 @@
 Type: Package
 Package: quarks
-Title: Simple Methods for Calculating Value at Risk and Expected
-        Shortfall
-Version: 1.0.11
+Title: Simple Methods for Calculating and Backtesting Value at Risk and
+        Expected Shortfall
+Version: 1.1.0
 Authors@R: 
     person(given = "Sebastian",
            family = "Letmathe",
@@ -14,18 +14,20 @@ Description: Enables the user to calculate Value at Risk (VaR)
     simulation. Currently plain-, age-, volatility-weighted- and filtered
     historical simulation are implemented in this package. Volatility weighting
     can be carried out via an exponentially weighted moving average model
-    (EWMA) or other GARCH-type models. The methods of the package are described in 
-    Gurrola-Perez, P. and Murphy, D. (2015)
-    <https://EconPapers.repec.org/RePEc:boe:boeewp:0525>.
+    (EWMA) or other GARCH-type models. The performance can be assessed via
+    Traffic Light Test, Coverage Tests and Loss Functions. The methods of the
+    package are described in Gurrola-Perez, P. and Murphy, D. (2015)
+    <https://EconPapers.repec.org/RePEc:boe:boeewp:0525> as well as McNeil, J.,
+    Frey, R., and Embrechts, P. (2015) <https://ideas.repec.org/b/pup/pbooks/10496.html>.
 License: GPL-3
 Depends: R (>= 2.10)
-Imports: rugarch, graphics, stats
+Imports: graphics, progress, rugarch, smoots, stats
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2022-01-09 15:03:30 UTC; Letmode
+Packaged: 2022-03-30 16:42:52 UTC; Letmode
 Author: Sebastian Letmathe [aut, cre] (Paderborn University, Germany)
 Maintainer: Sebastian Letmathe <sebastian.letmathe@uni-paderborn.de>
 Repository: CRAN
-Date/Publication: 2022-01-09 15:22:42 UTC
+Date/Publication: 2022-03-30 23:00:02 UTC

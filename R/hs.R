@@ -27,6 +27,11 @@ hs <- function(x, p = 0.975, method = c("age", "plain"), lambda = 0.98) {
         stop("A numeric vector of length > 1 and without NAs must be passed to",
              " 'x'.")
     }
+    if (!length(method) %in% c(1, 2) || any(is.na(method)) ||
+        !is.character(method) || !all(method %in% c("age", "plain"))) {
+        stop("A single character value must be passed to 'method'.",
+             "Valid choices are 'age' or 'plain'.")
+    }
     if (length(p) != 1 || is.na(p) || !is.numeric(p) || (p <= 0)) {
         stop("The argument 'p' must be a single non-NA double value with ",
              "0 < p < l.")
