@@ -5,7 +5,7 @@
 #' @param x a numeric matrix of asset returns or losses
 #' @param wts a numeric vector or matrix containing the portfolio
 #' weights; portfolio value is standardized to 1 on any observation unit;
-#' sum of weights should not exceed 1 (row-wise for matrices);by default
+#' sum of weights should not exceed 1 (row-wise for matrices); by default
 #' the portfolio is equally weighted over time and across all assets; if a
 #' vector is passed to \code{wts} the portfolio is equally weighted over time
 #' @param approxim controls if a first-order approximation for the calculation

@@ -24,10 +24,10 @@ capital; default is \code{1e-04}.}
 \value{
 an S3 class object, which is a list of
 \describe{
-\item{loss.func1}{regulatory loss function}
-\item{loss.func2}{firm's loss function following Sarma et al. (2003)}
-\item{loss.func3}{loss function following Abad et al. (2015)}
-\item{loss.func4}{Feng's loss function; a compromise of regulatory and
+\item{loss.fun1}{regulatory loss function}
+\item{loss.fun2}{firm's loss function following Sarma et al. (2003)}
+\item{loss.fun3}{loss function following Abad et al. (2015)}
+\item{loss.fun4}{Feng's loss function; a compromise of regulatory and
 firm's loss function}
 }
 }

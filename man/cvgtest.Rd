@@ -29,9 +29,9 @@ A list of class \code{quarks} with the following four elements:
 \item{p.cc}{the p-value of the conditional coverage test}
 \item{p.ind}{the p-value of the independence test}
 \item{model}{selected model for estimation; only available if a list
-returned by the \code{rollcast}) is passed to \code{cvgtest}}
+returned by the \code{rollcast} function is passed to \code{cvgtest}}
 \item{method}{selected method for estimation; only available if a list
-returned by the \code{rollcast}) is passed to \code{cvgtest}}
+returned by the \code{rollcast}) function is passed to \code{cvgtest}}
 }
 }
 \description{
@@ -45,28 +45,7 @@ corresponding estimated \code{obj$VaR} series and the coverage level \code{obj$p
 for which the VaR has been calculated. If an object returned by this function
 is entered into the R console, a detailed overview of the test
 results is printed.
-}
-\examples{
 
-prices <- DAX$price.close
-returns <- diff(log(prices))
-n <- length(returns)
-nout <- 250 # number of obs. for out-of-sample forecasting
-nwin <- 500 # window size for rolling forecasts
-results <- rollcast(x = returns, p = 0.975, method = 'age', nout = nout,
-                     nwin = nwin)
-cvgtest(results)
-
-}
-\references{
-Christoffersen, P. F. (1998). Evaluating interval forecasts. International
-economic review, pp. 841-862.
-
-Kupiec, P. (1995). Techniques for verifying the accuracy of risk measurement
-models. The J. of Derivatives, 3(2).
-
-
-'@details
 With this function, the conditional and the unconditional coverage
 tests introduced by Kupiec (1995) and Christoffersen (1998) can be applied.
 Given a return series \eqn{r_t} with \eqn{n} observations, divide the
@@ -87,4 +66,23 @@ for \eqn{t = n + 1, n + 2, ..., n + K} as the hit sequence, where \eqn{\alpha} i
 the confidence level for the VaR (often \eqn{\alpha = 0.95} or \eqn{\alpha = 0.99}).
 Furthermore, denote \eqn{p = \alpha} and let \eqn{w} be the actual covered
 proportion of losses in the data.
+}
+\examples{
+
+prices <- DAX$price.close
+returns <- diff(log(prices))
+n <- length(returns)
+nout <- 250 # number of obs. for out-of-sample forecasting
+nwin <- 500 # window size for rolling forecasts
+results <- rollcast(x = returns, p = 0.975, method = 'age', nout = nout,
+                     nwin = nwin)
+cvgtest(results)
+
+}
+\references{
+Christoffersen, P. F. (1998). Evaluating interval forecasts. International
+economic review, pp. 841-862.
+
+Kupiec, P. (1995). Techniques for verifying the accuracy of risk measurement
+models. The J. of Derivatives, 3(2).
 }

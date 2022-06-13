@@ -26,10 +26,10 @@
 #'
 #' @return an S3 class object, which is a list of
 #' \describe{
-#' \item{loss.func1}{regulatory loss function}
-#' \item{loss.func2}{firm's loss function following Sarma et al. (2003)}
-#' \item{loss.func3}{loss function following Abad et al. (2015)}
-#' \item{loss.func4}{Feng's loss function; a compromise of regulatory and
+#' \item{loss.fun1}{regulatory loss function}
+#' \item{loss.fun2}{firm's loss function following Sarma et al. (2003)}
+#' \item{loss.fun3}{loss function following Abad et al. (2015)}
+#' \item{loss.fun4}{Feng's loss function; a compromise of regulatory and
 #' firm's loss function}
 #' }
 #'
@@ -103,14 +103,14 @@ lossfun <- function(obj = list(loss = NULL, ES = NULL), beta = 1e-04) {
   FLF3 <- sum(loss.ex3) * beta
   FLF1 <- sum(loss.ex1) * beta
 
-  loss.func1 <- RLF * 10000
-  loss.func2 <- (RLF + FLF1) * 10000
-  loss.func3 <- (RLF + FLF2) * 10000
-  loss.func4 <- (RLF + FLF23 + FLF3) * 10000
-  result <- list(lossfunc1 = loss.func1,
-                 lossfunc2 = loss.func2,
-                 lossfunc3 = loss.func3,
-                 lossfunc4 = loss.func4)
+  loss.fun1 <- RLF * 10000
+  loss.fun2 <- (RLF + FLF1) * 10000
+  loss.fun3 <- (RLF + FLF2) * 10000
+  loss.fun4 <- (RLF + FLF23 + FLF3) * 10000
+  result <- list(lossfun1 = loss.fun1,
+                 lossfun2 = loss.fun2,
+                 lossfun3 = loss.fun3,
+                 lossfun4 = loss.fun4)
   message("\n", "Please note that the following results are multiplied with 10000.", "\n")
   return(result)
 }

@@ -1,3 +1,7 @@
+# quarks 1.1.1
+
+- slightly adjusted print method for 'cvgtest.R'
+
 # quarks 1.1.0
 
 - implemented 4 new functions which enable the user to apply various

@@ -33,9 +33,10 @@ install.packages("quarks")
 The data set `DAX`, which is implemented in the `quarks` package,
 contains daily financial data of the German stock index DAX from January
 2000 to December 2021 (currency in EUR). In the following examples of
-the (out-of-sample) one-step forecasts of the 97.5%-VaR (red line) and
-the corresponding ES (green line) are illustrated. Exceedances are
-indicated by the colored circles.
+the (out-of-sample) one-step forecasts of the
+97.5![\\%](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5C%25 "\%")-VaR
+(red line) and the corresponding ES (green line) are illustrated.
+Exceedances are indicated by the colored circles.
 
 ``` r
 # Calculating the returns
@@ -219,7 +220,7 @@ results <- rollcast(x = returns, p = 0.99, model = 'GARCH',
 trftest(results)
 #>  
 #> --------------------------------------------
-#> |            Backtesting result            |
+#> |            Traffic Light Test            |
 #> --------------------------------------------
 #>  Method: Volatility Weighting
 #>  Model:  sGARCH
@@ -230,11 +231,11 @@ trftest(results)
 #>  Green zone:  p < 95%          
 #>  Yellow zone: 95% <= p < 99.99%
 #>  Red zone:    p >= 99.99%      
-#>  
 #> --------------------------------------------
-#> |            Test - 99%-VaR              |
+#> |         Test result - 99%-VaR            |
 #> --------------------------------------------
 #>  Number of violations: 3
+#>  
 #>  p = 0.7581: Green zone
 #> --------------------------------------------
 ```
@@ -255,30 +256,36 @@ cvgtest(results)
 #> --------------------------------------------
 #> |               Test results               |
 #> --------------------------------------------
-#>  
+#>  Method: Volatility Weighting
+#>  Model:  sGARCH
 #> --------------------------------------------
 #> |        Unconditional coverage test       |
 #> --------------------------------------------
 #> H0: w = 0.99
-#> p_[uc] = 0.753
 #>  
+#> p_[uc] = 0.758
+#>  
+#> Decision: Fail to reject H0
 #> --------------------------------------------
 #> |            Independence test             |
 #> --------------------------------------------
+#> H0: w_[00] = w_[10]
 #>  
-#> H0: w_[00] = w[10]
-#> p_[ind] = 0.0198
+#> p_[ind] = 0.0196
 #>  
+#> Decision: Fail to reject H0
 #> --------------------------------------------
 #> |         Conditional coverage test        |
 #> --------------------------------------------
-#>  
 #> H0: w_[00] = w_[10] = 0.99
-#> p_[cc] = 0.0632
+#>  
+#> p_[cc] = 0.0625
+#>  
+#> Decision: Fail to reject H0
 #> --------------------------------------------
 ```
 
-**Example 6 - Coverage Tests**
+**Example 7 - Loss Functions**
 
 ``` r
 # Calculating the returns
@@ -292,16 +299,16 @@ results <- rollcast(x = returns, p = 0.99, model = 'GARCH',
 lossfun(results)
 #> 
 #> Please note that the following results are multiplied with 10000.
-#> $lossfunc1
+#> $lossfun1
 #> [1] 2.27884
 #> 
-#> $lossfunc2
+#> $lossfun2
 #> [1] 10.84525
 #> 
-#> $lossfunc3
+#> $lossfun3
 #> [1] 10.99533
 #> 
-#> $lossfunc4
+#> $lossfun4
 #> [1] 10.2165
 ```
 
@@ -311,7 +318,7 @@ lossfun(results)
 
 In `quarks` six functions are available.
 
-**Functions - version 1.0.12:**
+**Functions - version 1.1.1:**
 
 -   `cvgtest`: Applies various coverage tests to Value at Risk
 -   `ewma`: Estimates volatility of a return series by means of an

@@ -127,7 +127,8 @@ rollcast <- function(x, p = 0.975,
                      nwin = NULL,
                      nboot = NULL,
                      smoothscale = c("none", "lpr", "auto"),
-                     smoothopts = list(), ...) {
+                     smoothopts = list(),
+                     ...) {
 
     if (length(x) <= 1 || any(is.na(x)) || !is.numeric(x)) {
         stop("A numeric vector of length > 1 and without NAs must be passed to",
@@ -195,7 +196,7 @@ rollcast <- function(x, p = 0.975,
         if (is.null(smoothopts[["alg"]])) smoothopts[["alg"]] <- "A"
         if (is.null(smoothopts[["p"]])) smoothopts[["p"]] <- 3
         message("\n", "Please beware that smoothing of the unconditional ",
-                "scale message(function is still in an experimental stage!", "\n")
+                "scale function is still in an experimental stage!", "\n")
     }
     if (smoothscale == "lpr") {
         if (is.null(smoothopts[["b"]])) smoothopts[["b"]] <- 0.15

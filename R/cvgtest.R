@@ -37,9 +37,9 @@
 #' \item{p.cc}{the p-value of the conditional coverage test}
 #' \item{p.ind}{the p-value of the independence test}
 #' \item{model}{selected model for estimation; only available if a list
-#' returned by the \code{rollcast}) is passed to \code{cvgtest}}
+#' returned by the \code{rollcast} function is passed to \code{cvgtest}}
 #' \item{method}{selected method for estimation; only available if a list
-#' returned by the \code{rollcast}) is passed to \code{cvgtest}}
+#' returned by the \code{rollcast}) function is passed to \code{cvgtest}}
 #' }
 #'
 #' @references
@@ -50,7 +50,7 @@
 #' models. The J. of Derivatives, 3(2).
 #'
 #'
-#' '@details
+#' @details
 #' With this function, the conditional and the unconditional coverage
 #' tests introduced by Kupiec (1995) and Christoffersen (1998) can be applied.
 #' Given a return series \eqn{r_t} with \eqn{n} observations, divide the
@@ -129,13 +129,8 @@ cvgtest <- function(obj = list(loss = NULL, VaR = NULL, p = NULL)) {
 
   n.out <- length(loss)
   It <- loss > VaR
-  n0 <- sum(1 - It[2:n.out])
-  n1 <- sum(It[2:n.out])
-  pe <- n1/(n0 + n1)
-  Tp <- n0 * log(p) + n1 * log(1 - p)
-  T1 <- n0 * log(1 - pe) + n1 * log(pe)
-  LRuc <- -2 * (Tp - T1)
-
+  n0 <- sum(1 - It[1:n.out])
+  n1 <- sum(It[1:n.out])
   Itf <- It[1:(n.out - 1)]
   Its <- It[2:n.out]
   diff.It <- Itf - Its
@@ -145,29 +140,25 @@ cvgtest <- function(obj = list(loss = NULL, VaR = NULL, p = NULL)) {
   n10 <- sum(diff.It == 1)
   n11 <- sum(diff.It.0[Itf == 1])
 
+  puc <- n1 / n.out
   p01 <- n01 / (n00 + n01)
   p11 <- n11 / (n10 + n11)
 
-  if (n11 == 0) {
-    T2 <- n00 * log(1 - p01) + n01 * log(p01)
-  } else {
-    T2 <- n00 * log(1 - p01) + n01 * log(p01) + n10 * log(1 - p11) + n11 * log(p11)
-  }
-  LRind <- -2 * (T1 - T2)
+  Tp <- p^n0 * (1 - p)^n1
+  T1 <- (1 - puc)^n0 * puc^n1
 
+  if (n11 == 0) {
+    T2 <- (1 - p01)^n00 * p01^n01
+  } else {
+    T2 <- (1 - p01)^n00 * p01^n10 * (1 - p11)^n10 * p11^n11
+  }
+
+  LRuc <- -2 * log(Tp / T1)
+  LRind <- -2 * log(T1 / T2)
+  LRcc <- -2 * log(Tp / T2)
   p.uc <- 1 - pchisq(LRuc, 1)
   p.ind <- 1 - pchisq(LRind, 1)
-
-  ########## correct conditional coverage##############
-  num.cc <- n0 * log(p) + n1 * log(1 - p)
-  if (n11 == 0) {
-    denom.cc <- n00 * log(1 - p01) + n01 * log(p01)
-  } else {
-    denom.cc <- n00 * log(1 - p01) + n01 * log(p01) + n10 * log(1 - p11) + n11 * log(p11)
-  }
-
-  LR.cc <- -2 * (num.cc - denom.cc)
-  p.cc <- 1 - stats::pchisq(LR.cc, 2)
+  p.cc <- 1 - pchisq(LRcc, 2)
 
   result <- list(p = p,
                  p.uc = p.uc,

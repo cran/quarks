@@ -90,7 +90,11 @@ print.quarks <- function(x, ...) {
     result[p.vals >= 0.9999] <- "Red zone"
     p.vals <- round(p.vals, 4)
     cat("--------------------------------------------", fill = TRUE)
-    cat(paste0("|         Test result - ", (1 - x[["p"]]) * 100, "%-VaR          |"), fill = TRUE)
+    if (length(strsplit(paste((1 - x[["p"]]) * 100), split = ".", fixed = TRUE)[[1]]) > 1) {
+      cat(paste0("|         Test result - ", (1 - x[["p"]]) * 100, "%-VaR          |"), fill = TRUE)
+    } else {
+      cat(paste0("|         Test result - ", (1 - x[["p"]]) * 100, "%-VaR            |"), fill = TRUE)
+    }
     cat("--------------------------------------------", fill = TRUE)
     cat(" Number of violations:", pot.vals[1], fill = TRUE)
     cat(" ", fill = TRUE)
@@ -122,18 +126,36 @@ print.quarks <- function(x, ...) {
     cat("H0: w = ", x$p, sep = "", fill = TRUE)
     cat(" ", fill = TRUE)
     cat("p_[uc] = ", round(x$p.uc, 4), sep = "", fill = TRUE)
+    cat(" ", fill = TRUE)
+    if (x$p.uc <= (1 - x$p)) {
+      cat("Decision: Reject H0", fill = TRUE)
+    } else {
+      cat("Decision: Fail to reject H0", fill = TRUE)
+    }
     cat("--------------------------------------------", fill = TRUE)
     cat("|            Independence test             |", fill = TRUE)
     cat("--------------------------------------------", fill = TRUE)
-    cat("H0: w_[00] = w[10]", sep = "", fill = TRUE)
+    cat("H0: w_[00] = w_[10]", sep = "", fill = TRUE)
     cat(" ", fill = TRUE)
     cat("p_[ind] = ", round(x$p.ind, 4), sep = "", fill = TRUE)
+    cat(" ", fill = TRUE)
+    if (x$p.ind <= (1 - x$p)) {
+      cat("Decision: Reject H0", fill = TRUE)
+    } else {
+      cat("Decision: Fail to reject H0", fill = TRUE)
+    }
     cat("--------------------------------------------", fill = TRUE)
     cat("|         Conditional coverage test        |", fill = TRUE)
     cat("--------------------------------------------", fill = TRUE)
     cat("H0: w_[00] = w_[10] = ", x$p, sep = "", fill = TRUE)
     cat(" ", fill = TRUE)
     cat("p_[cc] = ", round(x$p.cc, 4), sep = "", fill = TRUE)
+    cat(" ", fill = TRUE)
+    if (x$p.cc <= (1 - x$p)) {
+      cat("Decision: Reject H0", fill = TRUE)
+    } else {
+      cat("Decision: Fail to reject H0", fill = TRUE)
+    }
     cat("--------------------------------------------", fill = TRUE)
   }
 }
