@@ -15,40 +15,15 @@
 #' stated in the null hypotheses of the coverage tests (see the section
 #' \code{Details} for more information); is set to \code{NULL} by default.}
 #' }
+#' @param conflvl a numeric vector with one element; the significance
+#' level at which the null hypotheses are evaluated; is set to \code{0.95} by
+#' default.
 #' Please note that a list returned by the \code{rollcast} function can be directly
 #' passed to \code{cvgtest}.
 #'
 #' @export
 #'
 #' @importFrom stats 'pchisq'
-#'
-#' @details
-#' The function needs three inputs: the out-of-sample loss series \code{obj$loss}, the
-#' corresponding estimated \code{obj$VaR} series and the coverage level \code{obj$p},
-#' for which the VaR has been calculated. If an object returned by this function
-#' is entered into the R console, a detailed overview of the test
-#' results is printed.
-#'
-#' @return
-#' A list of class \code{quarks} with the following four elements:
-#' \describe{
-#' \item{p}{probability p stated in the null hypotheses of the coverage tests}
-#' \item{p.uc}{the p-value of the unconditional coverage test}
-#' \item{p.cc}{the p-value of the conditional coverage test}
-#' \item{p.ind}{the p-value of the independence test}
-#' \item{model}{selected model for estimation; only available if a list
-#' returned by the \code{rollcast} function is passed to \code{cvgtest}}
-#' \item{method}{selected method for estimation; only available if a list
-#' returned by the \code{rollcast}) function is passed to \code{cvgtest}}
-#' }
-#'
-#' @references
-#' Christoffersen, P. F. (1998). Evaluating interval forecasts. International
-#' economic review, pp. 841-862.
-#'
-#' Kupiec, P. (1995). Techniques for verifying the accuracy of risk measurement
-#' models. The J. of Derivatives, 3(2).
-#'
 #'
 #' @details
 #' With this function, the conditional and the unconditional coverage
@@ -64,13 +39,99 @@
 #'
 #' if \eqn{-r_t > \widehat{VaR}_t (\alpha)} or
 #'
-#' \deqn{I_t = 0,}
+#' \deqn{I_t = 0,} otherwise,
 #'
-#' otherwise,
 #' for \eqn{t = n + 1, n + 2, ..., n + K} as the hit sequence, where \eqn{\alpha} is
 #' the confidence level for the VaR (often \eqn{\alpha = 0.95} or \eqn{\alpha = 0.99}).
 #' Furthermore, denote \eqn{p = \alpha} and let \eqn{w} be the actual covered
 #' proportion of losses in the data.
+#'
+#' 1. Unconditional coverage test:
+#'
+#' \deqn{H_{0, uc}: p = w}
+#'
+#' Let \eqn{K_1} be the number of ones in \eqn{I_t} and analogously \eqn{K_0} the number of
+#' zeros (all conditional on the first observation).
+#' Also calculate \eqn{\hat{w} = K_0 / (K - 1)}. Obtain
+#'
+#' \deqn{L(I_t, p) = p^{K_0}(1 - p)^{K_1}}
+#'
+#' and
+#'
+#' \deqn{L(I_t, \hat{w}) = \hat{w}^{K_0}(1 - \hat{w})^{K_1}}
+#'
+#' and subsequently the test statistic
+#'
+#' \deqn{LR_{uc} = -2  * \ln \{L(I_t, p) / L(I_t, \hat{w})\}.}
+#'
+#' \eqn{LR_{uc}} now asymptotically follows a chi-square-distribution with one degree
+#' of freedom.
+#'
+#' 2. Conditional coverage test:
+#'
+#' The conditional coverage test combines the unconditional coverage test
+#' with a test on independence. Denote by \eqn{w_{ij}} the probability of an \eqn{i} on day
+#' \eqn{t-1} being followed by a \eqn{j} on day \eqn{t}, where \eqn{i} and \eqn{j} correspond to the value of
+#' \eqn{I_t} on the respective day.
+#'
+#' \deqn{H_{0, cc}: w_{00} = w{10} = p}
+#'
+#' with \eqn{i = 0, 1} and \eqn{j = 0, 1}.
+#'
+#' Let \eqn{K_{ij}} be the number of observations, where the values on two following days
+#' follow the pattern \eqn{ij}. Calculate
+#'
+#' \deqn{L(I_t, \hat{w}_{00}, \hat{w}_{10})
+#' = \hat{w}_{00}^{K_{00}}(1 - \hat{w}_{00})^{K_{01}} * \hat{w}_{10})^{K_{10}}(1 - \hat{w}_{10})^{K_{11}},}
+#'
+#' where \eqn{\hat{w}_{00} = K_{00} / K_0} and \eqn{\hat{w}_{10} = K_{10} / K_1}. The test
+#' statistic is then given by
+#'
+#' \deqn{LR_{cc} = -2  * \ln \{ L(I_t, p) / L(I_t, \hat{w}_{00}, \hat{w}_{10}) \},}
+#'
+#' which asymptotically follows a chi-square-distribution with two degrees of
+#' freedom.
+#'
+#' 3. Independence test:
+#'
+#' \deqn{H_{0,ind}: w_{00} = w_{10}}
+#'
+#' The asymptotically chi-square-distributed test statistic (one degree of
+#' freedom) is given by
+#'
+#' \deqn{LR_{ind} = -2  * \ln \{L(I_t, \hat{w}_{00}, \hat{w}_{10}) / L(I_t, \hat{w})\}.}
+#'
+#' -----------------------------------------------------------------------------
+#'
+#' The function needs four inputs: the out-of-sample loss series \code{obj$loss}, the
+#' corresponding estimated VaR series \code{obj$VaR}, the coverage level \code{obj$p},
+#' for which the VaR has been calculated and the significance level \code{conflvl},
+#' at which the null hypotheses are evaluated. If an object returned by this
+#' function is entered into the R console, a detailed overview of the test results
+#' is printed.
+#'
+#' @return
+#' A list of class \code{quarks} with the following four elements:
+#' \describe{
+#' \item{p}{probability p stated in the null hypotheses of the coverage tests}
+#' \item{p.uc}{the p-value of the unconditional coverage test}
+#' \item{p.cc}{the p-value of the conditional coverage test}
+#' \item{p.ind}{the p-value of the independence test}
+#' \item{conflvl}{the significance level at which the null hypotheses are
+#' evaluated}
+#' \item{model}{selected model for estimation; only available if a list
+#' returned by the \code{rollcast} function is passed to \code{cvgtest}}
+#' \item{method}{selected method for estimation; only available if a list
+#' returned by the \code{rollcast}) function is passed to \code{cvgtest}}
+#' }
+#'
+#' @references
+#' Christoffersen, P. F. (1998). Evaluating interval forecasts. International
+#' economic review, pp. 841-862.
+#'
+#' Kupiec, P. (1995). Techniques for verifying the accuracy of risk measurement
+#' models. The J. of Derivatives, 3(2).
+#'
 #'
 #' @examples
 #'
@@ -84,7 +145,7 @@
 #' cvgtest(results)
 #'
 
-cvgtest <- function(obj = list(loss = NULL, VaR = NULL, p = NULL)) {
+cvgtest <- function(obj = list(loss = NULL, VaR = NULL, p = NULL), conflvl = 0.95) {
   if (!is.list(obj) && !is.data.frame(obj)) {
     stop("A list or data frame containing two vectors with equal
          length and without NAs as well as a single numeric value
@@ -131,6 +192,9 @@ cvgtest <- function(obj = list(loss = NULL, VaR = NULL, p = NULL)) {
   It <- loss > VaR
   n0 <- sum(1 - It[1:n.out])
   n1 <- sum(It[1:n.out])
+  if (n1 == 0) {
+    stop("No VaR violations found. Tests are not applicable.")
+  }
   Itf <- It[1:(n.out - 1)]
   Its <- It[2:n.out]
   diff.It <- Itf - Its
@@ -164,6 +228,7 @@ cvgtest <- function(obj = list(loss = NULL, VaR = NULL, p = NULL)) {
                  p.uc = p.uc,
                  p.ind = p.ind,
                  p.cc = p.cc,
+                 conflvl = conflvl,
                  method = method,
                  model = model)
   class(result) <- "quarks"

@@ -251,7 +251,7 @@ results <- rollcast(x = returns, p = 0.99, model = 'GARCH',
                      method = 'vwhs', nout = 250, nwin = 500)
 #> 
 #> Calculations completed.
-cvgtest(results)
+cvgtest(results, conflvl = 0.95)
 #>  
 #> --------------------------------------------
 #> |               Test results               |
@@ -273,7 +273,7 @@ cvgtest(results)
 #>  
 #> p_[ind] = 0.0196
 #>  
-#> Decision: Fail to reject H0
+#> Decision: Reject H0
 #> --------------------------------------------
 #> |         Conditional coverage test        |
 #> --------------------------------------------

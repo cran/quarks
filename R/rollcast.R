@@ -163,6 +163,9 @@ rollcast <- function(x, p = 0.975,
        (nwin + nout) > length(x)) {
         stop("Window size and (or) out-of-sample size are too large.")
     }
+    if (all(method == c("plain", "age", "vwhs", "fhs"))) {
+      method <- "plain"
+    }
     if (method == 'fhs' && (length(nboot) != 1 || is.na(nboot) ||
         !is.numeric(nboot) || nboot <= 0)) {
         stop("The argument 'nboot' must be a single non-NA integer value with ",
@@ -179,9 +182,6 @@ rollcast <- function(x, p = 0.975,
              "Valid choices are 'none', 'lpr' or 'auto'.")
     }
 
-
-    if (all(method == c("plain", "age", "vwhs", "fhs")))
-        method <- "plain"
     if (method != "fhs")
         nboot = "N/A"
     if (all(lambda == c(0.94, 0.98)) && method == "age")
