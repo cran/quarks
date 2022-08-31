@@ -2,7 +2,7 @@ Type: Package
 Package: quarks
 Title: Simple Methods for Calculating and Backtesting Value at Risk and
         Expected Shortfall
-Version: 1.1.2
+Version: 1.1.3
 Authors@R: 
     person(given = "Sebastian",
            family = "Letmathe",
@@ -21,13 +21,14 @@ Description: Enables the user to calculate Value at Risk (VaR)
     Frey, R., and Embrechts, P. (2015) <https://ideas.repec.org/b/pup/pbooks/10496.html>.
 License: GPL-3
 Depends: R (>= 2.10)
-Imports: graphics, progress, rugarch, smoots, stats
+Imports: dygraphs, ggplot2, graphics, progress, rugarch, shiny,
+        shinyjs, smoots, stats, yfR, xts
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.0
 NeedsCompilation: no
-Packaged: 2022-06-19 09:50:20 UTC; Letmode
+Packaged: 2022-08-31 19:23:36 UTC; Letmode
 Author: Sebastian Letmathe [aut, cre] (Paderborn University, Germany)
 Maintainer: Sebastian Letmathe <sebastian.letmathe@uni-paderborn.de>
 Repository: CRAN
-Date/Publication: 2022-06-20 10:00:02 UTC
+Date/Publication: 2022-08-31 20:00:02 UTC

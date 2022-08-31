@@ -1,3 +1,8 @@
+# quarks 1.1.3
+
+- added an application to download data from Yahoo Finance
+- fixed a bug in 'cvgtest.R'
+
 # quarks 1.1.2
 
 - added argument 'conflvl' to 'cvgtest.R' in order to set the significance 

@@ -316,9 +316,9 @@ lossfun(results)
 
 ## Functions
 
-In `quarks` six functions are available.
+In `quarks` ten functions are available.
 
-**Functions - version 1.1.1:**
+**Functions - version 1.1.3:**
 
 -   `cvgtest`: Applies various coverage tests to Value at Risk
 -   `ewma`: Estimates volatility of a return series by means of an
@@ -332,6 +332,8 @@ In `quarks` six functions are available.
     portfolio returns or losses
 -   `rollcast`: Computes rolling one-step-ahead forecasts of Value at
     Risk and Expected Shortfall
+-   `runFTS`: Starts a shiny application for downloading data from Yahoo
+    Finance
 -   `trftest`: Applies the Traffic Light Test to Value at Risk
 -   `vwhs`: Calculates univariate Value at Risk and Expected Shortfall
     by means of volatility weighted historical simulation
