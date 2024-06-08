@@ -1,3 +1,8 @@
+# quarks 1.1.4
+
+- updated data sets
+- fixed some minor bugs
+
 # quarks 1.1.3
 
 - added an application to download data from Yahoo Finance

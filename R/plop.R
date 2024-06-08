@@ -21,7 +21,7 @@
 #' }
 #' @examples
 #' # creating portfolio
-#' portfol <- cbind(SP500$price.close, DJI$price.close)
+#' portfol <- cbind(SP500$price_close, DJI$price_close)
 #' returns <- apply(portfol, 2, function(x) diff(log(x)))
 #' # defining weights and applying the P&L operator function
 #' wts <- c(0.4, 0.6)

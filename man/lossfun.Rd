@@ -43,7 +43,7 @@ functions are considered.
 }
 \examples{
 
-prices <- DAX$price.close
+prices <- DAX$price_close
 returns <- diff(log(prices))
 n <- length(returns)
 nout <- 250 # number of obs. for out-of-sample forecasting

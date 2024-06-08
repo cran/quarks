@@ -12,9 +12,9 @@
 #' volatility.
 #'
 #' @examples
-#' prices <- DAX$price.close
+#' prices <- DAX$price_close
 #' returns <- diff(log(prices))
-#' date <- DAX$ref.date[-1]
+#' date <- DAX$ref_date[-1]
 #' cvar <- ewma(x = returns, lambda = 0.94)
 #' csig <- sqrt(cvar)
 #' plot(date, csig, type = 'l',

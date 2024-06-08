@@ -88,11 +88,11 @@ filtered historical simulation.
 }
 \examples{
 
-prices <- DAX$price.close
+prices <- DAX$price_close
 returns <- diff(log(prices))
 n <- length(returns)
 nout <- 250 # number of obs. for out-of-sample forecasting
-nwin <- 500 # window size for rolling forecasts
+nwin <- 1000 # window size for rolling forecasts
 
 
 ### Example 1 - plain historical simulation
