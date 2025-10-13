@@ -1,3 +1,8 @@
+# quarks 1.1.5
+
+- minor improvements of the ShinyApp (runFTS) for downloading data from Yahoo Finance
+- fixed some minor bugs
+
 # quarks 1.1.4
 
 - updated data sets

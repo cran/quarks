@@ -43,16 +43,46 @@ runFTSdata <- function() {
                                     br(),
                                     "Close Application.",
                                     style = "font-family: 'consolas'; font-si16pt"),
+                                  br(),
+                                  br(),
+                                  selectInput("dropdown",
+                                              label = "Choose FTS - Upper Graph",
+                                              choices = c("no FTS selected", "price_open", "price_close",
+                                                          "price_adjusted",
+                                                          "price_high", "price_low",
+                                                          "volume", "ret_adjusted_prices",
+                                                          "ret_closing_prices",
+                                                          "cumret_adjusted_prices"),
+                                              selected = "price_close"),
+                                  textOutput("selected_option"),
+                                  br(),
+                                  br(),
+                                  selectInput("dropdown2",
+                                              label = "Choose FTS - Lower Graph",
+                                              choices = c("no FTS selected", "price_open", "price_close",
+                                                          "price_adjusted",
+                                                          "price_high", "price_low",
+                                                          "volume", "ret_adjusted_prices",
+                                                          "ret_closing_prices",
+                                                          "cumret_adjusted_prices"),
+                                              selected = "ret_closing_prices"),
+                                  textOutput("selected_option"),
                                   br()
                                 ),
 
                                 mainPanel(br(),
                                           br(),
+                                          conditionalPanel(
+                                            condition = "input.dropdown !== 'no FTS selected'",
                                           dygraphOutput("plot1"),
+                                          ),
                                           br(),
                                           br(),
-                                          br(),
-                                          dygraphOutput("plot2"))
+                                          conditionalPanel(
+                                            condition = "input.dropdown2 !== 'no FTS selected'",
+                                          dygraphOutput("plot2"),
+                                          ),
+                                          )
                               )
   ),
   server = function(input, output, session){
@@ -77,28 +107,33 @@ runFTSdata <- function() {
     })
 
 
-    output$plot1 <- renderDygraph({
-      req(input$ticker)
-      req(input$Date[1])
-      req(input$Date[2])
-      req(dataInput())
-      dat = dataInput()
-      plot_data = xts::xts(dat$price_close, dat$ref_date)
-      dygraphs::dygraph(plot_data, main = paste(input$ticker, "- Closing prices (daily)"),
-                        ylab = "X<sub>t</sub>", group = "FZS") %>%
-        dygraphs::dyUnzoom()
-    })
+  output$plot1 <- renderDygraph({
+    req(input$ticker)
+    req(input$Date[1])
+    req(input$Date[2])
+    req(input$dropdown)
+    req(dataInput())
+    dat = dataInput()
+    plot_data = xts::xts(dat[paste(input$dropdown)], dat$ref_date)
+    dygraphs::dygraph(plot_data, main = paste(input$ticker, input$dropdown, "(daily)"),
+                      #ylab = "X<sub>t</sub>",
+                      group = "FZS") %>%
+      dygraphs::dyUnzoom()
+  })
+
 
     output$plot2 <- renderDygraph({
       req(input$ticker)
       req(input$Date[1])
       req(input$Date[2])
+      req(input$dropdown)
       req(dataInput())
 
-      dat2 = dataInput()[-1, ]
-      plot_data2 = xts::xts(dat2$ret_closing_prices, dat2$ref_date)
-      dygraphs::dygraph(plot_data2, main = paste(input$ticker, "- Log-returns (daily)"),
-                        ylab = "Y<sub>t</sub>", xlab = "Daily observations (t)", group = "FZS") %>%
+      dat2 = dataInput()#[-1, ]
+      plot_data2 = xts::xts(dat2[paste(input$dropdown2)], dat2$ref_date)
+      dygraphs::dygraph(plot_data2, main = paste(input$ticker, input$dropdown2, "(daily)"),
+                        #ylab = "Y<sub>t</sub>",
+                        xlab = "Daily observations (t)", group = "FZS") %>%
         dygraphs::dyRangeSelector(height = 20) %>%
         dygraphs::dyUnzoom()
     })

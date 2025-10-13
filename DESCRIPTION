@@ -2,12 +2,12 @@ Type: Package
 Package: quarks
 Title: Simple Methods for Calculating and Backtesting Value at Risk and
         Expected Shortfall
-Version: 1.1.4
+Version: 1.1.5
 Authors@R: 
     person(given = "Sebastian",
            family = "Letmathe",
            role = c("aut", "cre"),
-           email = "sebastian.let@t-online.de")
+           email = "sebastian.let@yahoo.com")
 Description: Enables the user to calculate Value at Risk (VaR)
     and Expected Shortfall (ES) by means of various types of historical
     simulation. Currently plain-, age-, volatility-weighted- and filtered
@@ -24,10 +24,10 @@ Imports: dygraphs, ggplot2, graphics, progress, rugarch, shiny,
         shinyjs, smoots, stats, yfR, xts
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.3
 NeedsCompilation: no
-Packaged: 2024-06-08 08:54:09 UTC; Letmode
+Packaged: 2025-10-12 21:33:14 UTC; Letmode
 Author: Sebastian Letmathe [aut, cre]
-Maintainer: Sebastian Letmathe <sebastian.let@t-online.de>
+Maintainer: Sebastian Letmathe <sebastian.let@yahoo.com>
 Repository: CRAN
-Date/Publication: 2024-06-08 21:50:02 UTC
+Date/Publication: 2025-10-13 07:30:02 UTC
