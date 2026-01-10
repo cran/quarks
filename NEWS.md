@@ -1,3 +1,8 @@
+# quarks 1.1.6
+
+- minor improvements of the ShinyApp (runFTS) for downloading data from Yahoo Finance
+  * added the option to select data frequency
+
 # quarks 1.1.5
 
 - minor improvements of the ShinyApp (runFTS) for downloading data from Yahoo Finance

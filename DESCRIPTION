@@ -2,7 +2,7 @@ Type: Package
 Package: quarks
 Title: Simple Methods for Calculating and Backtesting Value at Risk and
         Expected Shortfall
-Version: 1.1.5
+Version: 1.1.6
 Authors@R: 
     person(given = "Sebastian",
            family = "Letmathe",
@@ -26,8 +26,8 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.3
 NeedsCompilation: no
-Packaged: 2025-10-12 21:33:14 UTC; Letmode
+Packaged: 2026-01-10 12:31:43 UTC; Letmode
 Author: Sebastian Letmathe [aut, cre]
 Maintainer: Sebastian Letmathe <sebastian.let@yahoo.com>
 Repository: CRAN
-Date/Publication: 2025-10-13 07:30:02 UTC
+Date/Publication: 2026-01-10 12:50:02 UTC
