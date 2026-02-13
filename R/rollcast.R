@@ -128,6 +128,8 @@ rollcast <- function(x, p = 0.975,
                      nboot = NULL,
                      smoothscale = c("none", "lpr", "auto"),
                      smoothopts = list(),
+                     solver.control = list(),
+                     solver = c("nlminb", "solnp", "lbfgs", "gosolnp", "nloptr", "hybrid"),
                      ...) {
 
     if (length(x) <= 1 || any(is.na(x)) || !is.numeric(x)) {
@@ -245,7 +247,8 @@ rollcast <- function(x, p = 0.975,
                fcastfun <- fhs
                funargs <- list(x = xcast, p = p,
                                lambda = lambda, nboot = nboot,
-                               model = model, ...)
+                               model = model, solver = solver,
+                               solver.control = solver.control, ...)
                 }
            )
 

@@ -45,7 +45,8 @@
 #' garch
 
 fhs <- function(x, p = 0.975, model = c("EWMA", "GARCH"), lambda = 0.94,
-                nboot = NULL, ...) {
+                nboot = NULL, solver = c("nlminb", "solnp", "lbfgs", "gosolnp", "nloptr", "hybrid"),
+                solver.control = list(), ...) {
   if (length(x) <= 1 || any(is.na(x)) || !is.numeric(x)) {
     stop("A numeric vector of length > 1 and without NAs must be passed to",
          " 'x'.")
@@ -78,7 +79,8 @@ fhs <- function(x, p = 0.975, model = c("EWMA", "GARCH"), lambda = 0.94,
   n <- length(x)
   if (model == "GARCH") {
     spec <- do.call(what = rugarch::ugarchspec, args = dots)
-    fit <- rugarch::ugarchfit(data = x, spec = spec)
+    fit <- rugarch::ugarchfit(data = x, spec = spec, solver = solver,
+                              solver.control = solver.control)
     csig <- as.numeric(rugarch::sigma(fit))
     one.ahead.csig <-
       as.numeric(rugarch::sigma(rugarch::ugarchforecast(fit, n.ahead = 1)))
